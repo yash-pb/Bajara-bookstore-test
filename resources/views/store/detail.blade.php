@@ -23,17 +23,17 @@
                     </div>
                     <div class="flex -mx-2 mb-4">
                         <div class="w-1/2 px-2 mt-3 flex flex-row md:flex-row">
-                            <a href="{{ route('user.addtofavorite', $book->id) }}" class="w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white py-2 px-4 rounded-full font-bold hover:bg-gray-300 dark:hover:bg-gray-600">Add to favorite</a>
-                            {{-- Auth::user()->books->toArray() --}}
-                            @if (in_array($book->id, array_column(Auth::user()->books->toArray(), 'book_id')))
-                                <svg class="h-8 w-8 text-red-500 fill-current text-red-600"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                </svg> 
-                            @else
-                                <svg class="h-8 w-8 text-red-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                </svg>                              
-                            @endif
+                            <a href="{{ route('user.addtofavorite', $book->id) }}" class="dark:bg-gray-700 text-gray-800 dark:text-white py-2 px-4 rounded-full font-bold hover:bg-gray-300 dark:hover:bg-gray-600">
+                                @if (in_array($book->id, array_column(Auth::user()->books->toArray(), 'book_id')))
+                                    <svg class="h-8 w-8 text-red-500 fill-current text-red-600"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                    </svg> 
+                                @else
+                                    <svg class="h-8 w-8 text-red-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                    </svg>                              
+                                @endif
+                            </a>
                         </div>
                     </div>
                 </div>

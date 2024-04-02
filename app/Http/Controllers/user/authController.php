@@ -49,6 +49,15 @@ class authController extends Controller
         if($request->isMethod('get')) {
             return view('store.login');
         }
+        $validator = Validator::make($request->all(), [
+            'email' => 'email|required',
+            'password' => 'required|min:6',
+        ]);
+ 
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+        
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             return redirect()->route('store.index');
         }
