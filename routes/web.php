@@ -3,9 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Book;
-use App\Models\FavoriteBook;
+use App\Http\Controllers\user\authController;
+use App\Http\Controllers\user\bookController;
 
 
 /*
@@ -19,67 +18,23 @@ use App\Models\FavoriteBook;
 |
 */
 
-Route::get('/', function () {
-    $books = Book::all()->toArray();
-    // dd($books);
-    return view('store.index', compact('books'));
-})->name('store.index');
+Route::match(['get','post'],'/', [bookController::class, 'index'])->name('store.index');
 
-
+// User Routes
 Route::name('user.')->group(function () {
-    Route::get('/login', function () {
-        return view('store.login');
-    })->name('login');
-    
-    Route::post('/login', function (Request $request) {
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect()->route('store.index');
-        }
+    // User Auth Route
+    Route::match(['get','post'],'/register', [authController::class, 'register'])->name('register');
+    Route::match(['get','post'],'/login', [authController::class, 'login'])->name('login')->middleware('guest');
+    Route::match(['get','post'],'/forgot-password', [authController::class, 'forgotPassword'])->name('forgot.password')->middleware('guest');
+    Route::match(['get','post'],'/change-password/{token}', [authController::class, 'changePassword'])->name('change.password')->middleware('guest');
+    Route::match(['get','post'],'/edit-profile', [authController::class, 'editProfile'])->name('edit.profile')->middleware('auth');
+    Route::get('/logout', [authController::class, 'logout'])->name('logout');
 
-        return redirect()->route('user.login')->with([
-            'msg' => 'Credential not matched',
-        ]);
-
-    })->name('verify');
-
-    Route::get('/books/{id}', function ($id) {
-        $book = Book::FindOrFail($id);
-        return view('store.detail', compact('book'));
-    })->name('book')->middleware('auth');
-
-    Route::get('/add-to-favorite/{id}', function ($id) {
-        if(FavoriteBook::where(['user_id' => Auth::user()->id, 'book_id' => $id])->exists()) {
-            return back()->with([
-                'msg' => 'Book Already Added',
-                'color' => 'red'
-            ]);
-        } else {
-            $favorite = FavoriteBook::create([
-                'book_id' => $id,
-                'user_id' => Auth::user()->id,
-            ]);
-
-            return back()->with([
-                'msg' => 'Book Added into favorite',
-                'color' => 'green'
-            ]);
-        }
-
-    })->name('addtofavorite')->middleware('auth');
-
-    Route::get('/favorite-book', function (Request $request) {
-        if(Auth::user()) {
-            $books = FavoriteBook::leftJoin('books', 'favourite_books.book_id', '=', 'books.id')->where('user_id', Auth::user()->id)->get()->toArray();
-            return view('store.favorite', compact('books'));
-        }
-
-        return redirect()->route('store.index');
-    })->name('favorite')->middleware('auth');
-
-    Route::get('/logout', function (Request $request) {
-        Auth::logout();
-        return redirect()->route('store.index');
-    })->name('logout');
+    // User Books Routes
+    Route::get('/books/{id}', [bookController::class, 'getSingleBook'])->name('book')->middleware('auth');
+    Route::get('/add-to-favorite/{id}', [bookController::class, 'addToFavorite'])->name('addtofavorite')->middleware('auth');
+    Route::get('/favorite-book', [bookController::class, 'favoriteBook'])->name('favorite')->middleware('auth');
+    Route::get('/remove-favorite/{id}', [bookController::class, 'removeFavorite'])->name('remove.favorite')->middleware('auth');
 });
 
 
