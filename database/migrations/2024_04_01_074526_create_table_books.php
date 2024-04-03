@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->double('price');
-            $table->string('image');
-            $table->string('cover_image');
+            $table->string('image')->nullable();
+            $table->string('cover_image')->nullable();
             $table->tinyInteger('status')->comment('1-active,2-inactive');
             $table->timestamps();
         });

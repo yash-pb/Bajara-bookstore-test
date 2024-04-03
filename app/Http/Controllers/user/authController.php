@@ -59,6 +59,10 @@ class authController extends Controller
         }
         
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            // dd(Auth::user());
+            if(Auth::user()->user_type == 1) {
+                return redirect()->route('admin.livewire.dashboard');
+            }
             return redirect()->route('store.index');
         }
     

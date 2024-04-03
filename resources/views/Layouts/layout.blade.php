@@ -8,5 +8,11 @@
         @include('Layouts.menubar')
     </header>
     @yield('content')
+
+    <script type="text/javascript">
+        function openSidebar() {
+            document.querySelector("#mobile-menu").classList.toggle("hidden");
+        }
+    </script>
 </body>
 </html>

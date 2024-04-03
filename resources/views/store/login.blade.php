@@ -10,10 +10,10 @@
 </head>
 <body>
     <div class="flex h-screen min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-neutral-200">
-        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm bg-white px-3 py-3 rounded-lg">
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm bg-white px-5 py-5 rounded-lg">
             <div class="sm:mx-auto sm:w-full sm:max-w-sm">
                 <h1 class="text-2xl font-bold text-center">Book Store</h1>
-                <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
+                <h2 class="mt-7 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
                 @if(Session::has('msg'))
                     <p class="error text-{{Session::get('color')}}-500 text-xs italic text-center my-5">{{Session::get('msg')}}</p>
                 @endif

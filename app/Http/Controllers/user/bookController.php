@@ -17,7 +17,7 @@ class bookController extends Controller
         $books = Book::whereAny([
             'name',
             'description',
-        ], 'LIKE', '%'.$search.'%')
+        ], 'LIKE', '%'.$search.'%')->where('status', 1)
         ->get()->toArray();
         
         return view('store.index', compact('books','search'));
@@ -63,6 +63,6 @@ class bookController extends Controller
     {
         $delete = FavoriteBook::where(['user_id' => Auth::user()->id, 'book_id' => $id])->delete();
 
-        return redirect()->route('user.favorite');
+        return back();
     }
 }

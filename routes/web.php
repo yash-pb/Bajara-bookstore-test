@@ -19,6 +19,7 @@ use App\Http\Controllers\user\bookController;
 */
 
 Route::match(['get','post'],'/', [bookController::class, 'index'])->name('store.index');
+// middleware(['guest']);
 
 // User Routes
 Route::name('user.')->group(function () {
@@ -39,6 +40,19 @@ Route::name('user.')->group(function () {
 
 
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+// Route::get('/admin/livewire/dashboard', function () {
+//     dd('Admin Dashboard');
+// })->name('admin');
+
+Route::group(['prefix' => 'admin/livewire','as' => 'admin.livewire.', 'middleware' => ['auth', 'role']], function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+
+    Route::group(['prefix' => 'books','as' => 'books.'], function () {
+        Route::get('/', function(){
+            return view('admin.books');
+        })->name('list');
+    });
+});
+// middleware(['guest']);

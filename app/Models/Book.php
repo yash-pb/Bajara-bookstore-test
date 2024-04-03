@@ -12,4 +12,9 @@ class Book extends Model
     protected $fillable = [
         'name', 'description', 'price', 'image', 'cover_image', 'status'
     ];
+
+    public function getStatusAttribute($value)
+    {
+        return ($value == 1) ? 'Active' : 'In-active';
+    }
 }

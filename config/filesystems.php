@@ -56,6 +56,13 @@ return [
             'throw' => false,
         ],
 
+        'books' => [
+            'driver' => 'local',
+            'root' => public_path(),
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*

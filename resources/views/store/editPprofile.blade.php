@@ -4,9 +4,9 @@
 @stop
 @section('content')
 
-<div class="container mx-auto py-6 px-2 sm:px-6 lg:px-8">
+<div class="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
 
-    <h1 class="mb-9 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl dark:text-white">Update Profile</h1>
+    <h1 class="mb-9 text-xl md:text-2xl lg:text-2xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white">Update Profile</h1>
 
     @if(Session::has('msg'))
         <div class="bg-{{ Session::get('color') }}-100 border my-5 border-{{ Session::get('color') }}-400 text-{{ Session::get('color') }}-700 px-4 py-3 rounded relative" role="alert">
@@ -19,8 +19,8 @@
 
     <form class="w-full" method="post" action="{{ route('user.edit.profile') }}">
         @csrf
-        <div class="flex flex-wrap -mx-3 mb-6">
-          <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+        <div class="flex flex-wrap -mx-3">
+          <div class="w-full md:w-1/2 px-3 mb-4 md:mb-6">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="full_name">
               Full Name
             </label>
@@ -29,8 +29,8 @@
                 <p class="error text-red-500 text-xs italic">{{ $message }}</p>
             @enderror
           </div>
-          <div class="w-full md:w-1/2 px-3">
-            <div class="w-full px-3">
+          <div class="w-full md:w-1/2 px-3 mb-4 md:mb-6">
+            <div class="w-full">
                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="email">
                     Email
                 </label>
@@ -41,8 +41,8 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-wrap -mx-3 mb-2">
-          <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+        <div class="flex flex-wrap -mx-3">
+          <div class="w-full md:w-1/2 px-3 mb-4">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="mobile_no">
               Mobile Number
             </label>
@@ -53,12 +53,10 @@
           </div>
         </div>
 
-        <div class="flex flex-wrap -mx-3 mb-2">
-          <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-            <button class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="submit">
-                Update
-            </button>
-          </div>
+        <div class="flex flex-wrap mt-2 md:mt-5 justify-end">
+          <button class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm md:text-md border-4 text-white py-1 md:py-2 px-3 md:px-5 rounded" type="submit">
+              Update
+          </button>
         </div>
     </form>
 </div>
