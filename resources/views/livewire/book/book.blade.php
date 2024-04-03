@@ -65,9 +65,9 @@
                                 {{ $book->status }}
                             </td>
                             <td class="px-6 py-4">
-                                {{-- <img class="object-cover h-[7rem] w-[9rem] lg:h-44 lg:w-32" src="{{ asset('books/'.$book->cover_image) }}"> --}}
-                                <img class="h-12 w-12 rounded object-cover cursor-pointer" src="{{ asset('books/'.$book->cover_image) }}">
-                                {{-- h-44 w-32 --}}
+                                <a href="{{ asset('books/'.$book->cover_image) }}" data-fancybox="gallery">
+                                    <img class="h-12 w-12 rounded object-cover cursor-pointer" src="{{ asset('books/'.$book->cover_image) }}">
+                                </a>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex space-x-4">

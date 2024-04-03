@@ -66,7 +66,9 @@
           @enderror
           <div class="image-preview" id="image-preview">
             @if($images)
-              <img class="h-12 w-12 rounded object-cover cursor-pointer" src="{{ $images->temporaryUrl() }}">
+              {{-- <a href="{{ $images->temporaryUrl() }}"> --}}
+                <img class="h-12 w-12 rounded object-cover cursor-pointer" src="{{ $images->temporaryUrl() }}">
+              {{-- </a> --}}
             @endif
           </div>
         </div>

@@ -57,9 +57,13 @@
             <div class="image-preview" id="image-preview">
               Cover Image Preview
               @if ($images)
+                {{-- <a href="{{ $images->temporaryUrl() }}"> --}}
                   <img class="h-12 w-12 rounded object-cover cursor-pointer" src="{{ $images->temporaryUrl() }}">
+                {{-- </a> --}}
               @elseif($cover_image)
+                <a href="{{ asset('books/'.$cover_image) }}">
                   <img class="h-12 w-12 rounded object-cover cursor-pointer" src="{{ asset('books/'.$cover_image) }}">
+                </a>
               @endif
             </div>
             @error('images')
