@@ -60,11 +60,15 @@
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-zip">
             Upload Cover Image
           </label>
-          <input name="images" wire:model="images" onchange="loadFile(event)" type="file" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+          <input name="images" wire:model="images" type="file" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
           @error('images')
             <p class="error text-red-500 text-xs italic">{{ $message }}</p>
           @enderror
-          <div class="image-preview" id="image-preview"></div>
+          <div class="image-preview" id="image-preview">
+            @if($images)
+              <img class="h-12 w-12 rounded object-cover cursor-pointer" src="{{ $images->temporaryUrl() }}">
+            @endif
+          </div>
         </div>
       </div>
 
@@ -79,19 +83,3 @@
     </div>
     </div>
 </form>
-
-<script>
-  function loadFile(event) {
-    var input = event.target;
-    var file = input.files[0];
-    var type = file.type;
-
-     var output = document.getElementById('image-preview');
-
-
-      output.src = URL.createObjectURL(event.target.files[0]);
-      output.onload = function() {
-          URL.revokeObjectURL(output.src) // free memory
-      }
-  };
-</script>

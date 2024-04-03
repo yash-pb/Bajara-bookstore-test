@@ -54,10 +54,17 @@
               Upload Cover Image
             </label>
             <input name="images" wire:model="images" onchange="loadFile(event)" type="file" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+            <div class="image-preview" id="image-preview">
+              Cover Image Preview
+              @if ($images)
+                  <img class="h-12 w-12 rounded object-cover cursor-pointer" src="{{ $images->temporaryUrl() }}">
+              @elseif($cover_image)
+                  <img class="h-12 w-12 rounded object-cover cursor-pointer" src="{{ asset('books/'.$cover_image) }}">
+              @endif
+            </div>
             @error('images')
               <p class="error text-red-500 text-xs italic">{{ $message }}</p>
             @enderror
-            <div class="image-preview" id="image-preview"></div>
         </div>
       </div>
 
@@ -72,3 +79,12 @@
     </div>
     </div>
 </form>
+
+{{-- <div class="image-preview h-60 w-60 rounded object-cover cursor-pointer" id="image-preview">
+  Cover Image Preview
+  @if ($images)
+      <img src="{{ $images->temporaryUrl() }}">
+  @elseif($cover_image)
+      <img src="{{ asset('books/'.$cover_image) }}">
+  @endif
+</div> --}}

@@ -158,6 +158,7 @@ class Book extends Component
         $this->bookId = '';
         $this->price = '';
         $this->cover_image = '';
+        $this->images = '';
         $this->status = '';
     }
 }
