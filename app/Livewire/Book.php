@@ -109,8 +109,9 @@ class Book extends Component
     // Update method
     public function updateBook(BookModel $book)
     {
+        $this->rules['images'] = 'mimes:jpeg,jpg,png';
         $this->validate();
-        $fileName = null;
+        $fileName = $this->cover_image;
         if($this->images) {
             $fileName = time() . '.' . $this->images->getClientOriginalExtension();
             $this->images->storeAs('books', $fileName, ['disk' => 'books']);
