@@ -6,9 +6,15 @@ use Livewire\Component;
 use App\Models\User as UserModel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Livewire\WithPagination;
+use Livewire\WithoutUrlPagination;
+
 
 class User extends Component
 {
+    use WithPagination;
+    use WithoutUrlPagination;
+
     // Declaration Properties
     public $updateMode, $createMode = false;
     public $search, $email, $status, $userId, $full_name, $mobile_no, $title = "";
@@ -19,22 +25,24 @@ class User extends Component
     protected $rules = [
         'full_name' => "required|max:50",
         'email' => "required|email|unique:users,email",
-        'mobile_no' => "required|numeric",
+        'mobile_no' => "required|numeric|phone:INTERNATIONAL",
         'status' => "required",
     ];
 
     // Render Method
     public function render()
     {
-        $this->users = UserModel::where('user_type', 2)
-            ->where(function ($query) {
-                $query->where('full_name', 'LIKE', '%'.$this->search.'%')
-                ->orWhere('email', 'LIKE', '%'.$this->search.'%')
-                ->orWhere('mobile_no', 'LIKE', '%'.$this->search.'%');
-            })
-            ->orderBy($this->sortCol, $this->sortBy)->get();
-        // dd($this);
-        return view('livewire.user.user');
+        $paginatedData = UserModel::where('user_type', 2)
+        ->where(function ($query) {
+            $query->where('full_name', 'LIKE', '%'.$this->search.'%')
+            ->orWhere('email', 'LIKE', '%'.$this->search.'%')
+            ->orWhere('mobile_no', 'LIKE', '%'.$this->search.'%');
+        })
+        ->orderBy($this->sortCol, $this->sortBy)->paginate(env('PAGINATION_VALUE'))
+        ->setPath(route('admin.livewire.users.list'));
+        $this->users = $paginatedData->items();
+
+        return view('livewire.user.user', compact('paginatedData'));
     }
 
     // Searching method

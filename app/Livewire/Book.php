@@ -5,12 +5,17 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Book as BookModel;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+use Livewire\WithoutUrlPagination;
 
 
 class Book extends Component
 {
-    // Declare Properties
     use WithFileUploads;
+    use WithPagination;
+    use WithoutUrlPagination;
+    
+    // Declare Properties
     public $books, $name, $description, $bookId, $price, $cover_image, $status, $updateMode, $createMode, $images = false;
     public $search = "";
     public $sortCol = 'name';
@@ -24,12 +29,20 @@ class Book extends Component
         'images' => 'required|mimes:jpeg,jpg,png'
     ];
 
+    // public function hydrate() {
+    //     $this->resetPage();
+    // }
+
+
     // Render Method
     public function render()
     {
-        $this->books = BookModel::select('id', 'name', 'description', 'price', 'cover_image', 'status')
-        ->where('name', 'LIKE', '%'.$this->search.'%')->orderBy($this->sortCol, $this->sortBy)->get();
-        return view('livewire.book.book');
+        $paginatedData = BookModel::select('id', 'name', 'description', 'price', 'cover_image', 'status')
+        ->where('name', 'LIKE', '%'.$this->search.'%')->orderBy($this->sortCol, $this->sortBy)->paginate(env('PAGINATION_VALUE'))
+        ->setPath(route('admin.livewire.books.list'));
+        $this->books = $paginatedData->items();
+        // dd($paginatedData->setPath(route('admin.livewire.users.list')));
+        return view('livewire.book.book', compact('paginatedData'));
     }
 
     // Soring Logic

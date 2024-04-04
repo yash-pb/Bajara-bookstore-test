@@ -76,8 +76,7 @@
             </table>
         </div>
     @endif
+    <div class="pagination-section my-3 float-right">
+        {{ $paginatedData->links('pagination::tailwind') }}
+    </div>
 </div>
-
-<script>
-
-</script>
