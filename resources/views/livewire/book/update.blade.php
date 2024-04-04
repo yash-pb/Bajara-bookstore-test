@@ -83,12 +83,3 @@
     </div>
     </div>
 </form>
-
-{{-- <div class="image-preview h-60 w-60 rounded object-cover cursor-pointer" id="image-preview">
-  Cover Image Preview
-  @if ($images)
-      <img src="{{ $images->temporaryUrl() }}">
-  @elseif($cover_image)
-      <img src="{{ asset('books/'.$cover_image) }}">
-  @endif
-</div> --}}

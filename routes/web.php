@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Http\Controllers\user\authController;
 use App\Http\Controllers\user\bookController;
+use App\Models\User;
+use App\Models\Book;
 
 
 /*
@@ -46,7 +48,9 @@ Route::name('user.')->group(function () {
 
 Route::group(['prefix' => 'admin/livewire','as' => 'admin.livewire.', 'middleware' => ['auth', 'role']], function () {
     Route::get('/dashboard', function () {
-        return view('admin.dashboard');
+        $totalUsers = User::where('user_type', 2)->count();
+        $totalBooks = Book::count();
+        return view('admin.dashboard', compact('totalUsers', 'totalBooks'));
     })->name('dashboard');
 
     Route::group(['prefix' => 'users','as' => 'users.'], function () {
