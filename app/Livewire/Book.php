@@ -109,7 +109,7 @@ class Book extends Component
     // Update method
     public function updateBook(BookModel $book)
     {
-        $this->rules['images'] = 'mimes:jpeg,jpg,png';
+        $this->rules['images'] = '';
         $this->validate();
         $fileName = $this->cover_image;
         if($this->images) {
@@ -154,7 +154,6 @@ class Book extends Component
     // Reset field method
     public function resetFields(){
         $this->name = '';
-        $this->description = '';
         $this->description = '';
         $this->bookId = '';
         $this->price = '';

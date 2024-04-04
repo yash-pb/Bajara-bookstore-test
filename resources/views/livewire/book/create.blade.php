@@ -1,5 +1,5 @@
 
-<h1 class="text-center text-2xl font-bold my-3">Create Book</h1>
+<h1 class="text-center text-2xl font-bold my-3">{{ Create Book }}</h1>
 
 <form class="w-full" wire:submit.prevent="storeBook()" action="#" enctype="multipart/form-data">
     @csrf
@@ -45,8 +45,8 @@
           <div class="relative">
             <select name="status" wire:model="status" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="status">
               <option value="">Select Option</option>
-              <option value="1" {{ $status == 1 ? 'selected' : '' }}>Active</option>
-              <option value="2" {{ $status == 2 ? 'selected' : '' }}>In-Active</option>
+              <option value="Active" {{ $status == 'Active' ? 'selected' : '' }}>Active</option>
+              <option value="In-active" {{ $status == 'In-active' ? 'selected' : '' }}>In-Active</option>
             </select>
             @error('status')
               <p class="error text-red-500 text-xs italic">{{ $message }}</p>

@@ -47,8 +47,17 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function getStatusAttribute($value)
+    {
+        return ($value == 1) ? 'Active' : 'In-active';
+    }
+
     public function books()
     {
         return $this->hasMany(FavoriteBook::class, 'user_id', 'id');
     }
+
+    const SORTCOL = 'full_name';
+    const SORTBY = 'asc';
+    const SORTCLS = 'up';
 }

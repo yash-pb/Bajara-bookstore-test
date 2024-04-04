@@ -49,6 +49,12 @@ Route::group(['prefix' => 'admin/livewire','as' => 'admin.livewire.', 'middlewar
         return view('admin.dashboard');
     })->name('dashboard');
 
+    Route::group(['prefix' => 'users','as' => 'users.'], function () {
+        Route::get('/', function(){
+            return view('admin.users');
+        })->name('list');
+    });
+
     Route::group(['prefix' => 'books','as' => 'books.'], function () {
         Route::get('/', function(){
             return view('admin.books');

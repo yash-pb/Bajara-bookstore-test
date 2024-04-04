@@ -62,7 +62,7 @@
                                 {{ $book->price }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ $book->status }}
+                                <span class="inline-flex items-center rounded-md bg-{{ $book->status == 'Active' ? 'green' : 'red' }}-50 px-2 py-1 text-xs font-medium text-{{ $book->status == 'Active' ? 'green' : 'red' }}-700 ring-1 ring-inset ring-{{ $book->status == 'Active' ? 'green' : 'red' }}-600/20">{{ $book->status }}</span>
                             </td>
                             <td class="px-6 py-4">
                                 <a href="{{ asset('books/'.$book->cover_image) }}" data-fancybox="gallery">
