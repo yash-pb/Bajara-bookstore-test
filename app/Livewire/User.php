@@ -32,7 +32,7 @@ class User extends Component
     // Render Method
     public function render()
     {
-        $paginatedData = UserModel::where('user_type', 2)
+        $paginatedData = UserModel::with('books')->where('user_type', 2)
         ->where(function ($query) {
             $query->where('full_name', 'LIKE', '%'.$this->search.'%')
             ->orWhere('email', 'LIKE', '%'.$this->search.'%')
@@ -41,7 +41,7 @@ class User extends Component
         ->orderBy($this->sortCol, $this->sortBy)->paginate(env('PAGINATION_VALUE'))
         ->setPath(route('admin.livewire.users.list'));
         $this->users = $paginatedData->items();
-
+        // dd($this->users);
         return view('livewire.user.user', compact('paginatedData'));
     }
 

@@ -32,6 +32,11 @@
                             </div>
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            <div class="flex flex-row gap-2 cursor-pointer">
+                                <span> Favorite Books </span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             <div class="flex flex-row gap-2 cursor-pointer" wire:model="sortCol" wire:click="sortingData('status')">
                                 <span> Status </span>
                                 <span> <i class="fa-solid fa-sort-{{ sortArrowMatch($sortCol, 'status', $sortCls) }} align-middle" wire:model="sortBy"></i> </span>
@@ -53,6 +58,13 @@
                             </td>
                             <td class="px-6 py-4">
                                 {{ $user->mobile_no }}
+                            </td>
+                            <td class="px-6 py-4">
+                                @forelse ($user->books as $book)
+                                    <li>{{ getBookName($book->book_id) }}</li>
+                                @empty
+                                    <strong> No Favorite Books </strong>
+                                @endforelse
                             </td>
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center rounded-md bg-{{ $user->status == 'Active' ? 'green' : 'red' }}-50 px-2 py-1 text-xs font-medium text-{{ $user->status == 'Active' ? 'green' : 'red' }}-700 ring-1 ring-inset ring-{{ $user->status == 'Active' ? 'green' : 'red' }}-600/20">{{ $user->status }}</span>
