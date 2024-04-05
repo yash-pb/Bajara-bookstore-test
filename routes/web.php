@@ -42,9 +42,12 @@ Route::name('user.')->group(function () {
 
 
 
-// Route::get('/admin/livewire/dashboard', function () {
-//     dd('Admin Dashboard');
-// })->name('admin');
+// Route::get('/admin/vue', function () {
+//     return view('panel');
+// });
+Route::get('admin/vue/{any?}', function () {
+    return view('panel');
+});
 
 Route::group(['prefix' => 'admin/livewire','as' => 'admin.livewire.', 'middleware' => ['auth', 'role']], function () {
     Route::get('/dashboard', function () {
