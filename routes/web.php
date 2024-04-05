@@ -40,15 +40,6 @@ Route::name('user.')->group(function () {
     Route::get('/remove-favorite/{id}', [bookController::class, 'removeFavorite'])->name('remove.favorite')->middleware('auth');
 });
 
-
-
-// Route::get('/admin/vue', function () {
-//     return view('panel');
-// });
-Route::get('admin/vue/{any?}', function () {
-    return view('panel');
-});
-
 Route::group(['prefix' => 'admin/livewire','as' => 'admin.livewire.', 'middleware' => ['auth', 'role']], function () {
     Route::get('/dashboard', function () {
         $totalUsers = User::where('user_type', 2)->count();
@@ -69,3 +60,13 @@ Route::group(['prefix' => 'admin/livewire','as' => 'admin.livewire.', 'middlewar
     });
 });
 // middleware(['guest']);
+
+// Vue Admin Route
+// Route::get('admin/vue/login', function () {
+//     return view('auth');
+// })->name('admin.vue');
+
+
+Route::get('admin/vue/{any?}', function () {
+    return view('panel');
+})->name('admin.vue');

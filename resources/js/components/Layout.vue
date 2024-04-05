@@ -1,9 +1,11 @@
 
 <template>
-    <Header></Header>
-    <Sidebar></Sidebar>
-    <div class="px-3 py-3 lg:pl-[20rem] w-full overflow-auto xl:overflow-x-hidden">
-        <router-view />
+    <div>
+        <Header></Header>
+        <Sidebar></Sidebar>
+        <div class="px-3 py-3 lg:pl-[20rem] w-full overflow-auto xl:overflow-x-hidden">
+            <router-view />
+        </div>
     </div>
 </template>
 <script>

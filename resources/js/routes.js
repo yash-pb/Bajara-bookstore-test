@@ -3,32 +3,42 @@ import App from "./App.vue";
 import Dashboard from "./pages/Dashboard.vue";
 import Users from "./pages/Users.vue";
 import Books from "./pages/Books.vue";
+import Login from "./pages/auth/Login.vue";
+import Layout from "./components/Layout.vue";
 
 const prefix = '/admin/vue/';
 
 const routes = [
     {
+        path: prefix + 'login',
+        name: 'login', 
+        component: Login
+    },
+    {
         path: prefix,
-        component: App,
+        name: 'index', 
+        component: Layout,
+        children: [
+            {
+                path: 'dashboard',
+                name: 'dashboard', 
+                component: Dashboard
+            },
+            {
+                path: 'users',
+                name: 'users', 
+                component: Users
+            },
+            {
+                path: 'books',
+                name: 'books', 
+                component: Books
+            }
+        ],
         redirect: {
-            name: 'dashboard'
-        }
-    },
-    {
-        path: prefix + 'dashboard',
-        name: 'dashboard', 
-        component: Dashboard,
-    },
-    {
-        path: prefix + 'users',
-        name: 'users', 
-        component: Users,
-    },
-    {
-        path: prefix + 'books',
-        name: 'books', 
-        component: Books,
-    }
+            name: 'login'
+        },
+    }   
 ];
 
 const router = createRouter({
