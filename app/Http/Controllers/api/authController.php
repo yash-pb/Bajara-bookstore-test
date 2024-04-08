@@ -24,6 +24,17 @@ class authController extends Controller
         return ['token' => $token->plainTextToken];
     }
 
+    public function logout()
+    {
+        // dd(auth(), Auth::user());
+        Auth::logout();
+        // auth()->user()->tokens()->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'logout success.'
+        ], 200);
+    }
+
     public function users(Request $request, $id = null)
     {
         if($id) {

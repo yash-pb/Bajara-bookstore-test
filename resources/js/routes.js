@@ -16,15 +16,15 @@ const routes = [
     {
         path: prefix + 'login',
         name: 'login', 
-        component: Login,
-        meta: {
-            hideForAuth: true
-        }
+        component: Login
     },
     {
         path: prefix,
         name: 'index', 
         component: Layout,
+        meta: {
+            requiresAuth: true
+        },
         children: [
             {
                 path: 'dashboard',
@@ -63,10 +63,7 @@ const routes = [
                 component: BookEdit,
                 props: true
             },
-        ],
-        redirect: {
-            name: 'login'
-        },
+        ]
     }   
 ];
 
@@ -76,5 +73,19 @@ const router = createRouter({
 });
 
 // console.log(routes);
+// protecting routes
+router.beforeEach((to, from, next) => {
+    if (to.meta.requiresAuth) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        next();
+      } else {
+        next({name: 'login'});
+      }
+    } else {
+      next();
+    }
+  });
+  
 
 export default router;

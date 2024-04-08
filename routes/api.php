@@ -30,3 +30,5 @@ Route::post('/store-book', [authController::class, 'storeBook'])->middleware('au
 Route::post('/update-book/{id}', [authController::class, 'updateBook'])->middleware('auth:sanctum');
 Route::delete('/books/destroy/{id}', [authController::class, 'destroyBook'])->middleware('auth:sanctum');
 
+Route::get('/logout', [authController::class, 'logout']);
+

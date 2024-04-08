@@ -9,7 +9,9 @@
                         <!-- </a> -->
                     </div>
                 </div>
+                <!-- <button v-if="loggedIn" @click="setLogin()">Logout</button> -->
                 <div class="">
+                    <a href="#" @click="logout" class="font-medium text-blue-600 hover:underline">Log out</a>
                 </div>
             </div>
         </div>
@@ -18,6 +20,25 @@
 
 <script>
 export default {
-  name: 'Header'
+  name: 'Header',
+  methods: {
+    async logout() {
+        // console.log('call');
+        axios
+        .get('logout')
+        .then(response => {
+            if(response.status === 200) {
+                localStorage.removeItem('token');
+                this.$router.push({ name: 'login' });
+            }
+        })
+        .catch((err) => {
+            if (err.response.status === 422) {
+                console.log(err.response.data.message);
+            }
+        })
+        .finally(() => this.loading = false)
+    }
+  }
 }
 </script>
