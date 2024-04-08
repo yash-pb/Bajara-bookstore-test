@@ -1,10 +1,11 @@
 import { createWebHistory, createRouter } from "vue-router";
 import App from "./App.vue";
 import Dashboard from "./pages/Dashboard.vue";
-import Users from "./pages/Users.vue";
+import Users from "./pages/user/Users.vue";
 import Books from "./pages/Books.vue";
 import Login from "./pages/auth/Login.vue";
 import Layout from "./components/Layout.vue";
+import Create from "./pages/user/Create.vue";
 
 const prefix = '/admin/vue/';
 
@@ -12,7 +13,10 @@ const routes = [
     {
         path: prefix + 'login',
         name: 'login', 
-        component: Login
+        component: Login,
+        meta: {
+            hideForAuth: true
+        }
     },
     {
         path: prefix,
@@ -27,7 +31,14 @@ const routes = [
             {
                 path: 'users',
                 name: 'users', 
-                component: Users
+                component: Users,
+                children: [
+                    {
+                        path: 'create',
+                        name: 'create', 
+                        component: Create
+                    }
+                ]
             },
             {
                 path: 'books',

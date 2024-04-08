@@ -1,6 +1,6 @@
 <template>  
     <router-view />
-    <router-view name="loginView" />
+    <!-- <router-view name="loginView" /> -->
 </template>
   
 <script>

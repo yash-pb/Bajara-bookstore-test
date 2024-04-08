@@ -6,11 +6,14 @@
                 <h1 class="text-2xl font-bold text-center">Book Store</h1>
                 <h2 class="mt-7 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
             </div>
-            <form action="javascript:void(0)" class="space-y-5" method="POST">
+            <div v-if="message" class="p-4 mb-4 my-2 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                {{ msg }}
+            </div>
+            <form @submit.prevent="checkLogin" class="space-y-5">
                 <div>
                     <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
                     <div class="mt-2">
-                        <input id="email" name="email" type="email" placeholder="Enter email" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input id="email" v-model="credentials.email" type="email" placeholder="Enter email" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
         
@@ -19,7 +22,7 @@
                         <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
                     </div>
                     <div class="mt-2">
-                        <input id="password" name="password" type="password" autocomplete placeholder="Enter password" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input id="password" v-model="credentials.password" name="password" type="password" placeholder="Enter password" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
 
@@ -44,39 +47,35 @@
     </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'vuex';
+
 export default {
     name:"login",
-    data(){
+    data() {
         return {
-            auth:{
-                email:"",
-                password:""
-            },
-            validationErrors:{},
-            processing:false
+            credentials: {}
         }
     },
-    methods:{
-        ...mapActions({
-            signIn:'auth/login'
-        }),
-        async login(){
-            this.processing = true
-            await axios.get('/sanctum/csrf-cookie')
-            await axios.post('/login',this.auth).then(({data})=>{
-                this.signIn()
-            }).catch(({response})=>{
-                if(response.status===422){
-                    this.validationErrors = response.data.errors
-                }else{
-                    this.validationErrors = {}
-                    alert(response.data.message)
+    methods: {
+        async checkLogin() {
+            axios
+            .post('login', this.credentials)
+            .then(response => {
+                console.log('response => ', response);
+                if(response.status === 200) {
+                    localStorage.setItem('token', response.data.token);
+                    console.log('in login method => ', axios.defaults);
+                    this.$router.push({ name: 'dashboard' });
                 }
-            }).finally(()=>{
-                this.processing = false
             })
-        },
+            .catch((err) => {
+                console.log(err);
+                if (err.response.status === 422) {
+                    console.log(err.response.data.message);
+                }
+            })
+            .finally(() => this.loading = false)
+        }
     }
 }
 </script>
