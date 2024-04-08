@@ -1,22 +1,41 @@
 <script setup>
-import { reactive, ref } from 'vue';
-// import { useRoute } from 'vue-router'
-// console.log('this => ', this);
-// const router = useRoute();
-// router.push({ path: 'users' })
+import { onMounted, ref } from 'vue';
+const user = ref([])
+const errors = ref([])
  
-const errors = ref({})
-
-const user = reactive({
-    full_name: '',
-    email: '',
-    mobile_no: '',
-    status: ''
+const props = defineProps({
+    id: {
+        required: true,
+        type: String
+    }
+})
+ 
+onMounted(async () => {
+    try {
+        const response = await axios.get('users/'+props.id, {
+            headers: {
+                'Authorization' : `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(response => {
+            console.log('response => ', response);
+            user.value = response.data.data
+        })
+        .catch((err) => {
+            console.log('err => ', err);
+            if (err.response.status === 401) {
+                console.log(err.response.data.message);
+                this.$router.push({ name: 'users' });
+            }
+        });
+        
+    } catch (error) {
+        console.error('error => ', error);
+    }
 });
 
 function storeUser() {
     axios
-    .post('store-user', user, {
+    .post('store-user/'+props.id, user.value, {
         headers: {
             'Authorization' : `Bearer ${localStorage.getItem('token')}`
         }
@@ -25,9 +44,6 @@ function storeUser() {
         console.log('response => ', response, response.status);
         if(response.status === 200) {
             window.location.href = '/admin/vue/users';
-            // this.$router.push({ name: 'users' });
-            // router.replace({ path: '/users' })
-            // router.push({ name: 'users' });
         }
     })
     .catch((err) => {
@@ -37,11 +53,12 @@ function storeUser() {
         }
     });
 }
+ 
 </script>
 
 <template>
     
-    <h1 class="text-center text-2xl font-bold my-3">Create User</h1>
+    <h1 class="text-center text-2xl font-bold my-3">Update User</h1>
 
     <form class="w-full" @submit.prevent="storeUser" enctype="multipart/form-data">
         <div class="flex flex-wrap -mx-3 mb-4">

@@ -65,7 +65,7 @@ export default {
                 if(response.status === 200) {
                     localStorage.setItem('token', response.data.token);
                     console.log('in login method => ', axios.defaults);
-                    this.$router.push({ name: 'dashboard' });
+                    // this.$router.push({ name: 'dashboard' });
                 }
             })
             .catch((err) => {

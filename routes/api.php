@@ -20,6 +20,8 @@ use App\Http\Controllers\api\authController;
 // });
 
 Route::post('/login', [authController::class, 'login']);
-// Route::get('/get-users', [authController::class, 'getUsers'])->name('getUsers');
+
 Route::get('/users/{id?}', [authController::class, 'users'])->middleware('auth:sanctum');
+Route::post('/store-user/{id?}', [authController::class, 'storeUser'])->middleware('auth:sanctum');
+Route::delete('/users/destroy/{id}', [authController::class, 'destroy'])->middleware('auth:sanctum');
 

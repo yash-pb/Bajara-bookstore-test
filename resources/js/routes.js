@@ -5,7 +5,8 @@ import Users from "./pages/user/Users.vue";
 import Books from "./pages/Books.vue";
 import Login from "./pages/auth/Login.vue";
 import Layout from "./components/Layout.vue";
-import Create from "./pages/user/Create.vue";
+import UserCreate from "./pages/user/Create.vue";
+import UserEdit from "./pages/user/Edit.vue";
 
 const prefix = '/admin/vue/';
 
@@ -31,14 +32,18 @@ const routes = [
             {
                 path: 'users',
                 name: 'users', 
-                component: Users,
-                children: [
-                    {
-                        path: 'create',
-                        name: 'create', 
-                        component: Create
-                    }
-                ]
+                component: Users
+            },
+            {
+                path: 'users/create',
+                name: 'user.create', 
+                component: UserCreate
+            },
+            {
+                path: 'users/edit/:id',
+                name: 'user.edit', 
+                component: UserEdit,
+                props: true
             },
             {
                 path: 'books',

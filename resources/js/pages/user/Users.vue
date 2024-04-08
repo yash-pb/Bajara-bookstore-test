@@ -27,7 +27,29 @@ export default {
             } catch (error) {
                 console.error('error => ', error);
             }
-
+        },
+        async deleteUsers(id) {
+            console.log('in users delete => ', axios.defaults, id);
+            try {
+                const response = await axios.delete('users/destroy/'+id, {
+                    headers: {
+                        'Authorization' : `Bearer ${this.token}`
+                    }
+                }).then(response => {
+                    console.log('response => ', response);
+                    if(response.status === 200)
+                        this.fetchUsers();
+                })
+                .catch((err) => {
+                    console.log('err => ', err);
+                    if (err.response.status === 401) {
+                        console.log(err.response.data.message);
+                    }
+                });
+                
+            } catch (error) {
+                console.error('error => ', error);
+            }
         },
     },
     beforeMount(){
@@ -37,17 +59,7 @@ export default {
         token() {
             return localStorage.getItem('token');
         }
-    },
-    created() {
-        // this.$router.options.routes.forEach(route => {
-        //     this.items.push({
-        //         name: route.name
-        //         , path: route.path
-        //     })
-        // })
-        console.log(" => ", this.$router.options.routes);
     }
-
 }
 </script>
 
@@ -56,9 +68,11 @@ export default {
             <h1 class="text-2xl font-bold m-0">Users List</h1>
             <div class="sm:ms-auto flex items-center justify-center space-x-2">
                 <input type="search" id="search" name="search" class="block p-2 pl-5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="Search user...">
-                <router-link :to="{name:'create'}">
-                    <button class="ms-auto float-right flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded">Create User</button>
-                </router-link>
+                <button class="ms-auto float-right flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded">
+                    <router-link :to="{name:'user.create'}">
+                        Create User
+                    </router-link>
+                </button>
             </div>
         </div>
         <div class="relative overflow-x-auto">
@@ -118,8 +132,12 @@ export default {
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex space-x-4">
-                                <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Edit</button>
-                                <button class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Delete</button>
+                                <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                                    <router-link :to="{name:'user.edit', params: { id: user.id }}">
+                                        Edit
+                                    </router-link>
+                                </button>
+                                <button @click="deleteUsers(user.id)" class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Delete</button>
                             </div>
                         </td>
                     </tr>
