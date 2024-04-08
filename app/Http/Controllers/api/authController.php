@@ -17,7 +17,6 @@ class authController extends Controller
 {
     public function login(Request $request)
     {
-        // dd($request);
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response(['message' => __('auth.failed')], 422);
         }
@@ -27,9 +26,6 @@ class authController extends Controller
 
     public function users(Request $request, $id = null)
     {
-        // $users = User::paginate(10);
-
-        // return UserResource::collection($users);
         if($id) {
             return new UserResource(User::where('user_type', 2)->findOrFail($id));
         }
@@ -37,14 +33,12 @@ class authController extends Controller
             $query->where('full_name', 'LIKE', '%'.$request->search.'%')
             ->orWhere('email', 'LIKE', '%'.$request->search.'%')
             ->orWhere('mobile_no', 'LIKE', '%'.$request->search.'%');
-        })->paginate(2));
+        })->get());
     }
 
     public function storeUser(Request $request, $id = null)
     {
         try {
-            // dd($request, $id);
-
             $validator = Validator::make($request->all(), [
                 'full_name' => 'required',
                 'email' => 'required|email',
@@ -87,7 +81,6 @@ class authController extends Controller
                 'message' => 'User created successfully.'
             ], 200);
         } catch (\Throwable $th) {
-            dd($th);
             return response()->json([
                 'status' => false,
                 'message' => 'Something went wrong'
@@ -105,7 +98,6 @@ class authController extends Controller
                 'message' => 'User deleted successfully.'
             ], 200);
         } catch (\Throwable $th) {
-            // dd($th);
             return response()->json([
                 'status' => false,
                 'message' => 'Something went wrong'
@@ -188,7 +180,6 @@ class authController extends Controller
             }
 
             $fileName = (Book::where('id', $id)->first('cover_image'))->cover_image;
-            // dd($request, $request->cover_image, $fileName);
             if(!is_string($request->cover_image)) {
                 $fileName = time() . '.' . $request->cover_image->getClientOriginalExtension();
                 $request->cover_image->storeAs('books', $fileName, ['disk' => 'books']);
@@ -208,7 +199,6 @@ class authController extends Controller
             ], 200);
             
         } catch (\Throwable $th) {
-            dd($th);
             return response()->json([
                 'status' => false,
                 'message' => 'Something went wrong'
@@ -226,7 +216,6 @@ class authController extends Controller
                 'message' => 'Book deleted successfully.'
             ], 200);
         } catch (\Throwable $th) {
-            // dd($th);
             return response()->json([
                 'status' => false,
                 'message' => 'Something went wrong'
