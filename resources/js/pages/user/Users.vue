@@ -6,18 +6,22 @@ export default {
         }
     },
     methods: {
-        async fetchUsers() {
-            console.log('in users => ', axios.defaults);
+        async fetchUsers(event = null) {
+            if(event) {
+                let search = event.target.value;
+            }
             try {
                 const response = await axios.get('users', {
                     headers: {
                         'Authorization' : `Bearer ${this.token}`
+                    },
+                    params: {
+                        'search': this.search
                     }
                 }).then(response => {
-                    this.users = response.data.data;
+                    this.users = response.data.data ?? '';
                 })
                 .catch((err) => {
-                    console.log('err => ', err);
                     if (err.response.status === 401) {
                         console.log(err.response.data.message);
                         this.$router.push({ name: 'login' });
@@ -29,19 +33,16 @@ export default {
             }
         },
         async deleteUsers(id) {
-            console.log('in users delete => ', axios.defaults, id);
             try {
                 const response = await axios.delete('users/destroy/'+id, {
                     headers: {
                         'Authorization' : `Bearer ${this.token}`
                     }
                 }).then(response => {
-                    console.log('response => ', response);
                     if(response.status === 200)
                         this.fetchUsers();
                 })
                 .catch((err) => {
-                    console.log('err => ', err);
                     if (err.response.status === 401) {
                         console.log(err.response.data.message);
                     }
@@ -67,7 +68,7 @@ export default {
     <div class="flex-col sm:flex-row flex sm:items-center justify-between my-3 sm:space-x-2 space-y-2 sm:space-y-0 w-full">
             <h1 class="text-2xl font-bold m-0">Users List</h1>
             <div class="sm:ms-auto flex items-center justify-center space-x-2">
-                <input type="search" id="search" name="search" class="block p-2 pl-5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="Search user...">
+                <input type="search" v-model="search" v-on:keyup="fetchUsers" id="search" name="search" class="block p-2 pl-5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="Search user...">
                 <button class="ms-auto float-right flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded">
                     <router-link :to="{name:'user.create'}">
                         Create User

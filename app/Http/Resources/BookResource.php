@@ -19,6 +19,9 @@ class BookResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
+            'price' => $this->price,
+            'cover_image' => env('APP_TEST_URL') .'/books/'. $this->cover_image,
+            'status' => $this->status,
         ];
     }
 }

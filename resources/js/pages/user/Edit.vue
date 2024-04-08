@@ -17,11 +17,9 @@ onMounted(async () => {
                 'Authorization' : `Bearer ${localStorage.getItem('token')}`
             }
         }).then(response => {
-            console.log('response => ', response);
             user.value = response.data.data
         })
         .catch((err) => {
-            console.log('err => ', err);
             if (err.response.status === 401) {
                 console.log(err.response.data.message);
                 this.$router.push({ name: 'users' });
@@ -41,7 +39,6 @@ function storeUser() {
         }
     })
     .then(response => {
-        console.log('response => ', response, response.status);
         if(response.status === 200) {
             window.location.href = '/admin/vue/users';
         }

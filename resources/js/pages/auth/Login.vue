@@ -61,15 +61,12 @@ export default {
             axios
             .post('login', this.credentials)
             .then(response => {
-                console.log('response => ', response);
                 if(response.status === 200) {
                     localStorage.setItem('token', response.data.token);
-                    console.log('in login method => ', axios.defaults);
-                    // this.$router.push({ name: 'dashboard' });
+                    this.$router.push({ name: 'dashboard' });
                 }
             })
             .catch((err) => {
-                console.log(err);
                 if (err.response.status === 422) {
                     console.log(err.response.data.message);
                 }

@@ -25,3 +25,8 @@ Route::get('/users/{id?}', [authController::class, 'users'])->middleware('auth:s
 Route::post('/store-user/{id?}', [authController::class, 'storeUser'])->middleware('auth:sanctum');
 Route::delete('/users/destroy/{id}', [authController::class, 'destroy'])->middleware('auth:sanctum');
 
+Route::get('/books/{id?}', [authController::class, 'books'])->middleware('auth:sanctum');
+Route::post('/store-book', [authController::class, 'storeBook'])->middleware('auth:sanctum');
+Route::post('/update-book/{id}', [authController::class, 'updateBook'])->middleware('auth:sanctum');
+Route::delete('/books/destroy/{id}', [authController::class, 'destroyBook'])->middleware('auth:sanctum');
+

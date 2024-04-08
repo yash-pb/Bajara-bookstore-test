@@ -22,16 +22,11 @@ function storeUser() {
         }
     })
     .then(response => {
-        console.log('response => ', response, response.status);
         if(response.status === 200) {
             window.location.href = '/admin/vue/users';
-            // this.$router.push({ name: 'users' });
-            // router.replace({ path: '/users' })
-            // router.push({ name: 'users' });
         }
     })
     .catch((err) => {
-        console.log("err => ", err);
         if (err.response.status === 422) {
             errors.value = err.response.data.errors
         }

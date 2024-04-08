@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class UserCollection extends ResourceCollection
+class BookCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -17,8 +17,8 @@ class UserCollection extends ResourceCollection
         // return parent::toArray($request);
         return [
             'data' => $this->collection,
-            'meta' => [
-                'total_users' => $this->collection->count(),
+            'links' => [
+                'self' => 'link-value',
             ],
         ];
 
