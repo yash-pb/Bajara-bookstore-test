@@ -20,7 +20,6 @@ export default function useBooks() {
     }
 
     const getBooks = async (page = 1) => {
-        console.log('perPage => ', perPage.value);
         let response = await axios.get(`books?page=${page}`, {
             headers: {
                 'Authorization' : `Bearer ${getToken()}`

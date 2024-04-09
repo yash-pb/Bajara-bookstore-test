@@ -17,7 +17,6 @@ const saveBook = async () => {
 }
 
 const onFileChange = (e) => {
-    console.log(e.target.files[0]);
     book.cover_image = e.target.files[0];
 }
 </script>

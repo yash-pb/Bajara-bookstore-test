@@ -93,9 +93,6 @@ import { TailwindPagination } from 'laravel-vue-pagination';
 const { books, search, sorting, perPage, booksLength, getBooks, destroyBook } = useBooks() 
 onMounted(getBooks)
 
-let sort = sorting.value;
-console.log('sort => ', sort.col);
-
 const deleteBooks = async (id) => {
     if (!window.confirm('You sure?')) {
         return
