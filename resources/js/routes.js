@@ -69,7 +69,9 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
+    // linkActiveClass: "bg-blue-600",
+    // linkExactActiveClass: "bg-blue-600"
 });
 
 // console.log(routes);
