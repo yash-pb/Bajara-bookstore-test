@@ -20,6 +20,7 @@ class BookCollection extends ResourceCollection
             'meta' => [
                 'pagination' => $this->collection->count(),
             ],
+            'sorting' => $request->sorting ?? []
         ];
 
     }

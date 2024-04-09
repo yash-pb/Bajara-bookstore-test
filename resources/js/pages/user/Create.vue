@@ -1,9 +1,5 @@
 <script setup>
 import { reactive, ref } from 'vue';
-// import { useRoute } from 'vue-router'
-// console.log('this => ', this);
-// const router = useRoute();
-// router.push({ path: 'users' })
  
 const errors = ref({})
 

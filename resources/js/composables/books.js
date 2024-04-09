@@ -6,6 +6,10 @@ export default function useBooks() {
     const books = ref([])
     const search = ref([])
     const booksLength = ref([])
+    const sorting = ref({
+        "col": 'name',
+        "by": 'asc'
+    })
  
     const errors = ref('')
     const router = useRouter()
@@ -20,11 +24,13 @@ export default function useBooks() {
                 'Authorization' : `Bearer ${getToken()}`
             },
             params: {
-                'search': search.value
+                'search': search.value,
+                'sorting': JSON.stringify(sorting.value)
             }
         })
         books.value = response.data;
         booksLength.value = response.data.data.length;
+        sorting.value = JSON.parse(response.data.sorting);
     }
 
     const storeBook = async (data) => {
@@ -98,6 +104,7 @@ export default function useBooks() {
         books,
         search,
         booksLength,
+        sorting,
         getBooks,
         storeBook,
         getBook,

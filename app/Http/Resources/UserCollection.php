@@ -14,12 +14,14 @@ class UserCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
+        // dd($request->sorting);
         // return parent::toArray($request);
         return [
             'data' => $this->collection,
             'meta' => [
                 'pagination' => $this->collection->count(),
             ],
+            'sorting' => $request->sorting ?? []
         ];
 
     }

@@ -16,22 +16,24 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
-                        <div class="flex flex-row gap-2 cursor-pointer">
+                        <div class="flex flex-row gap-2 cursor-pointer" @click="switchSort('name')">
                             <span> Name </span>
+                            <span> <i class="fa-solid align-middle" :class="setUpSorting('name')"></i> </span>
                         </div>
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        <div class="flex flex-row gap-2 cursor-pointer">
+                        <div class="flex flex-row gap-2 cursor-pointer" @click="switchSort('description')">
                             <span> Description </span>
+                            <span> <i class="fa-solid align-middle" :class="setUpSorting('description')"></i> </span>
                         </div>
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        <div class="flex flex-row gap-2 cursor-pointer">
+                        <div class="flex flex-row gap-2 cursor-pointer" :class="setUpSorting('price')" @click="switchSort('price')">
                             <span> Price </span>
                         </div>
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        <div class="flex flex-row gap-2 cursor-pointer">
+                        <div class="flex flex-row gap-2 cursor-pointer" :class="setUpSorting('status')" @click="switchSort('status')">
                             <span> Status </span>
                         </div>
                     </th>
@@ -82,8 +84,11 @@ import useBooks from "../../composables/books";
 import { onMounted } from 'vue';
 import { TailwindPagination } from 'laravel-vue-pagination';
  
-const { books, search, booksLength, getBooks, destroyBook } = useBooks() 
+const { books, search, sorting, booksLength, getBooks, destroyBook } = useBooks() 
 onMounted(getBooks)
+
+let sort = sorting.value;
+console.log('sort => ', sort.col);
 
 const deleteBooks = async (id) => {
     if (!window.confirm('You sure?')) {
@@ -96,5 +101,26 @@ const deleteBooks = async (id) => {
 const searchAssign = (event) => {
     search.value = event.target.value;
     getBooks()
+}
+
+const setUpSorting = (th) => {
+    return {
+        'fa-sort-up': (sorting.value.col === th ? sorting.value.by == 'asc' : ''),
+        'fa-sort-down': (sorting.value.col === th ? sorting.value.by == 'desc' : '')
+    }
+}
+
+const switchSort = (col) => {
+    if(sorting.value.col == col) {
+        if(sorting.value.by == 'asc') {
+            sorting.value.by = 'desc';
+        } else {
+            sorting.value.by = 'asc';
+        }
+    } else {
+        sorting.value.col = col;
+        sorting.value.by = 'asc';
+    }
+    getBooks();
 }
 </script>

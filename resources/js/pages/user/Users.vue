@@ -6,7 +6,11 @@ export default {
         return {
             users: [],
             search: '',
-            usersLength: 0
+            usersLength: 0,
+            sorting: {
+                "col": 'full_name',
+                "by": 'asc'
+            }
         }
     },
     components: {
@@ -20,11 +24,13 @@ export default {
                         'Authorization' : `Bearer ${this.token}`
                     },
                     params: {
-                        'search': this.search
+                        'search': this.search,
+                        'sorting': JSON.stringify(this.sorting)
                     }
                 }).then(response => {
                     this.users = response.data ?? [];
                     this.usersLength = response.data.data.length;
+                    this.sorting = JSON.parse(response.data.sorting);
                 })
                 .catch((err) => {
                     if (err.response.status === 401) {
@@ -60,6 +66,25 @@ export default {
         async searchAssign(event) {
             this.search = event.target.value;
             this.fetchUsers();
+        },
+        async setUpSorting(th) {
+            return {
+                'fa-sort-up': (this.sorting.col === th ? this.sorting.by == 'asc' : ''),
+                'fa-sort-down': (this.sorting.col === th ? this.sorting.by == 'desc' : '')
+            }
+        },
+        switchSort(col) {
+            if(this.sorting.col == col) {
+                if(this.sorting.by == 'asc') {
+                    this.sorting.by = 'desc';
+                } else {
+                    this.sorting.by = 'asc';
+                }
+            } else {
+                this.sorting.col = col;
+                this.sorting.by = 'asc';
+            }
+            this.fetchUsers();
         }
     },
     beforeMount(){
@@ -90,28 +115,32 @@ export default {
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
-                        <div class="flex flex-row gap-2 cursor-pointer">
+                        <div class="flex flex-row gap-2 cursor-pointer" @click="switchSort('full_name')">
                             <span> Name </span>
+                            <span> <i class="fa-solid align-middle" :class="setUpSorting('full_name')"></i> </span>
                         </div>
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        <div class="flex flex-row gap-2 cursor-pointer">
+                        <div class="flex flex-row gap-2 cursor-pointer" @click="switchSort('email')">
                             <span> Email </span>
+                            <span> <i class="fa-solid align-middle" :class="setUpSorting('email')"></i> </span>
                         </div>
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        <div class="flex flex-row gap-2 cursor-pointer">
+                        <div class="flex flex-row gap-2 cursor-pointer" @click="switchSort('mobile_no')">
                             <span> Mobile </span>
+                            <span> <i class="fa-solid align-middle" :class="setUpSorting('mobile_no')"></i> </span>
+                        </div>
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        <div class="flex flex-row gap-2 cursor-pointer" @click="switchSort('status')">
+                            <span> Status </span>
+                            <span> <i class="fa-solid align-middle" :class="setUpSorting('status')"></i> </span>
                         </div>
                     </th>
                     <th scope="col" class="px-6 py-3">
                         <div class="flex flex-row gap-2 cursor-pointer">
                             <span> Favorite Books </span>
-                        </div>
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        <div class="flex flex-row gap-2 cursor-pointer">
-                            <span> Status </span>
                         </div>
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -131,14 +160,14 @@ export default {
                         {{ user.mobile_no }}
                     </td>
                     <td class="px-6 py-4">
+                        <span class="inline-flex items-center rounded-md bg-white-50 px-2 py-1 text-xs font-medium text-white-700 ring-1 ring-inset ring-white-600/20">{{ user.status }}</span>
+                    </td>
+                    <td class="px-6 py-4">
                         <ul>
                             <li v-for="favorite in user.favorite_books" :key="favorite.id">
                                 {{ favorite.book_details.name }}
                             </li>
                         </ul>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="inline-flex items-center rounded-md bg-white-50 px-2 py-1 text-xs font-medium text-white-700 ring-1 ring-inset ring-white-600/20">{{ user.status }}</span>
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex space-x-4">

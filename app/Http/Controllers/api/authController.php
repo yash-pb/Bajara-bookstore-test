@@ -26,9 +26,8 @@ class authController extends Controller
 
     public function logout()
     {
-        // dd(auth(), Auth::user());
         Auth::logout();
-        // auth()->user()->tokens()->delete();
+        // Auth::user()->tokens()->delete();
         return response()->json([
             'status' => true,
             'message' => 'logout success.'
@@ -37,6 +36,9 @@ class authController extends Controller
 
     public function users(Request $request, $id = null)
     {
+        $sorCol = json_decode($request->sorting)->col ?? 'name';
+        $sortBy = json_decode($request->sorting)->by ?? 'asc';
+
         if($id) {
             return new UserResource(User::where('user_type', 2)->findOrFail($id));
         }
@@ -44,7 +46,7 @@ class authController extends Controller
             $query->where('full_name', 'LIKE', '%'.$request->search.'%')
             ->orWhere('email', 'LIKE', '%'.$request->search.'%')
             ->orWhere('mobile_no', 'LIKE', '%'.$request->search.'%');
-        })->paginate(env('PAGINATION_VALUE')));
+        })->orderBy($sorCol, $sortBy)->paginate(env('PAGINATION_VALUE')));
     }
 
     public function storeUser(Request $request, $id = null)
@@ -118,13 +120,16 @@ class authController extends Controller
 
     public function books(Request $request, $id = null)
     {
+        $sorCol = json_decode($request->sorting)->col ?? 'name';
+        $sortBy = json_decode($request->sorting)->by ?? 'asc';
+
         if($id) {
             return new BookResource(Book::findOrFail($id));
         }
         return new BookCollection(Book::where(function ($query) use($request) {
             $query->where('name', 'LIKE', '%'.$request->search.'%')
             ->orWhere('description', 'LIKE', '%'.$request->search.'%');
-        })->paginate(env('PAGINATION_VALUE')));
+        })->orderBy($sorCol, $sortBy)->paginate(env('PAGINATION_VALUE')));
     }
 
     public function storeBook(Request $request)

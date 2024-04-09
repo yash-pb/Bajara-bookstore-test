@@ -23,7 +23,6 @@ export default {
   name: 'Header',
   methods: {
     async logout() {
-        // console.log('call');
         axios
         .get('logout')
         .then(response => {
