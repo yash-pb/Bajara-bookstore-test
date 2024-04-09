@@ -10,7 +10,8 @@ export default {
             sorting: {
                 "col": 'full_name',
                 "by": 'asc'
-            }
+            },
+            perPage: 2
         }
     },
     components: {
@@ -25,7 +26,8 @@ export default {
                     },
                     params: {
                         'search': this.search,
-                        'sorting': JSON.stringify(this.sorting)
+                        'sorting': JSON.stringify(this.sorting),
+                        'per_page': this.perPage
                     }
                 }).then(response => {
                     this.users = response.data ?? [];
@@ -73,7 +75,7 @@ export default {
                 'fa-sort-down': (this.sorting.col === th ? this.sorting.by == 'desc' : '')
             }
         },
-        switchSort(col) {
+        async switchSort(col) {
             if(this.sorting.col == col) {
                 if(this.sorting.by == 'asc') {
                     this.sorting.by = 'desc';
@@ -84,6 +86,10 @@ export default {
                 this.sorting.col = col;
                 this.sorting.by = 'asc';
             }
+            this.fetchUsers();
+        },
+        async recordCount(event) {
+            this.perPage = event.target.value;
             this.fetchUsers();
         }
     },
@@ -102,6 +108,12 @@ export default {
     <div class="flex-col sm:flex-row flex sm:items-center justify-between my-3 sm:space-x-2 space-y-2 sm:space-y-0 w-full">
         <h1 class="text-2xl font-bold m-0">Users List</h1>
         <div class="sm:ms-auto flex items-center justify-center space-x-2">
+            <select id="record" @change="recordCount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-25 p-2.5">
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+            </select>
             <input type="search" v-model="search" id="search" name="search" @keyup="searchAssign" class="block p-2 pl-5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="Search user...">
             <button class="ms-auto float-right flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded">
                 <router-link :to="{name:'user.create'}">

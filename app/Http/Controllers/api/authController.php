@@ -45,7 +45,8 @@ class authController extends Controller
             $query->where('full_name', 'LIKE', '%'.$request->search.'%')
             ->orWhere('email', 'LIKE', '%'.$request->search.'%')
             ->orWhere('mobile_no', 'LIKE', '%'.$request->search.'%');
-        })->orderBy($sorCol, $sortBy)->paginate(env('PAGINATION_VALUE')));
+        // })->orderBy($sorCol, $sortBy)->paginate(env('PAGINATION_VALUE')));
+        })->orderBy($sorCol, $sortBy)->paginate($request->per_page));
     }
 
     public function storeUser(Request $request, $id = null)
@@ -128,7 +129,8 @@ class authController extends Controller
         return new BookCollection(Book::where(function ($query) use($request) {
             $query->where('name', 'LIKE', '%'.$request->search.'%')
             ->orWhere('description', 'LIKE', '%'.$request->search.'%');
-        })->orderBy($sorCol, $sortBy)->paginate(env('PAGINATION_VALUE')));
+        // })->orderBy($sorCol, $sortBy)->paginate(env('PAGINATION_VALUE')));
+        })->orderBy($sorCol, $sortBy)->paginate($request->per_page));
     }
 
     public function storeBook(Request $request)

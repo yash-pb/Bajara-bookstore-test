@@ -6,6 +6,7 @@ export default function useBooks() {
     const books = ref([])
     const search = ref([])
     const booksLength = ref([])
+    const perPage = ref(2)
     const sorting = ref({
         "col": 'name',
         "by": 'asc'
@@ -19,13 +20,15 @@ export default function useBooks() {
     }
 
     const getBooks = async (page = 1) => {
+        console.log('perPage => ', perPage.value);
         let response = await axios.get(`books?page=${page}`, {
             headers: {
                 'Authorization' : `Bearer ${getToken()}`
             },
             params: {
                 'search': search.value,
-                'sorting': JSON.stringify(sorting.value)
+                'sorting': JSON.stringify(sorting.value),
+                'per_page': perPage.value
             }
         }).catch(err => {
             if(err.response.status == 401) {
@@ -109,6 +112,7 @@ export default function useBooks() {
         search,
         booksLength,
         sorting,
+        perPage,
         getBooks,
         storeBook,
         getBook,
