@@ -16,7 +16,7 @@ class forgotPasswordMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(private $token)
+    public function __construct(private $token, private $paath)
     {
         //
     }
@@ -38,7 +38,10 @@ class forgotPasswordMail extends Mailable
     {
         return new Content(
             view: 'store.mail.forgotPassword',
-            with: ['token' => $this->token],
+            with: [
+                'token' => $this->token,
+                'path' => $this->paath
+            ],
         );
     }
 

@@ -1,23 +1,51 @@
-<script setup>
-import useBooks from '../../composables/books'
-import { onMounted } from 'vue';
- 
-const { errors, book, updateBook, getBook } = useBooks()
-const props = defineProps({
-    id: {
-        required: true,
-        type: String
-    }
-})
- 
-onMounted(() => getBook(props.id))
- 
-const saveBook = async () => {
-    await updateBook(props.id)
-}
-
-const onFileChange = (e) => {
-    book.cover_image = e.target.files[0];
+<script>
+export default {
+    data() {
+        return {
+            errors: '',
+            book: {},
+            id: this.$route.params.id
+        }
+    },
+    methods: {
+        async getBook (id) {
+            let response = await axios.get(`/books/${this.id}`, {
+                headers: {
+                    'Authorization' : `Bearer ${this.token}`
+                }
+            })
+            this.book = response.data.data
+        },
+        async updateBook () {
+            this.errors = '';
+            try {
+                await axios.post(`/update-book/${this.id}`, this.book, {
+                    headers: {
+                        'content-type': 'multipart/form-data',
+                        'Authorization' : `Bearer ${this.token}`
+                    }
+                })
+                this.$router.push({name: 'books'})
+            } catch (e) {
+                if (e.response.status === 422) {
+                    for (const key in e.response.data.errors) {
+                        this.errors = e.response.data.errors
+                    }
+                }
+            }
+        },
+        onFileChange (e) {
+            this.book.cover_image = e.target.files[0];
+        }
+    },
+    async mounted() {
+        await this.getBook();
+    },
+    computed: {
+        token() {
+            return localStorage.getItem('token');
+        }
+    },
 }
 </script>
 
@@ -25,7 +53,7 @@ const onFileChange = (e) => {
     
     <h1 class="text-center text-2xl font-bold my-3">Update Book</h1>
 
-    <form class="w-full" @submit.prevent="saveBook" enctype="multipart/form-data">
+    <form class="w-full" @submit.prevent="updateBook" enctype="multipart/form-data">
         <div class="flex flex-wrap -mx-3 mb-4">
         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name">
@@ -80,7 +108,6 @@ const onFileChange = (e) => {
                     Cover Image Preview
                 </div>
                 <img :src="book.cover_image" class="h-12 w-12 rounded object-cover cursor-pointer" v-if="book.cover_image" />
-
             </div>
         </div>
 

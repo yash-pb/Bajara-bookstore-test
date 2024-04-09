@@ -83,7 +83,7 @@ class authController extends Controller
             User::where(['email' => $request->email])->update([
                 'remember_token' => $token
             ]);
-            Mail::to($request->email)->send(new forgotPasswordMail($token));
+            Mail::to($request->email)->send(new forgotPasswordMail($token, env('APP_TEST_URL')));
 
             return redirect()->route('user.login')->with([
                 'msg' => 'Email send successfully',
@@ -97,10 +97,10 @@ class authController extends Controller
         ]);
     }
 
-    public function changePassword(Request $request, $token)
+    public function changePassword(Request $request)
     {
         if($request->isMethod('get')) {
-            if(User::where(['remember_token' => $token])->exists()) {
+            if(User::where(['remember_token' => $request->token])->exists()) {
                 return view('store.changePassword');
             }
         }
@@ -113,7 +113,7 @@ class authController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $update = User::where(['remember_token' => $token])->update([
+        $update = User::where(['remember_token' => $request->token])->update([
             'remember_token' => null,
             'password' => Hash::make($request->password)
         ]);

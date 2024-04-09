@@ -4,6 +4,8 @@ import Dashboard from "./pages/Dashboard.vue";
 import Users from "./pages/user/Users.vue";
 import Books from "./pages/book/Books.vue";
 import Login from "./pages/auth/Login.vue";
+import ForgotPassword from "./pages/auth/ForgotPassword.vue";
+import ChangePassword from "./pages/auth/ChangePassword.vue";
 import Layout from "./components/Layout.vue";
 import UserCreate from "./pages/user/Create.vue";
 import UserEdit from "./pages/user/Edit.vue";
@@ -17,6 +19,16 @@ const routes = [
         path: prefix + 'login',
         name: 'login', 
         component: Login
+    },
+    {
+        path: prefix + 'forgot-password',
+        name: 'forgot.password',
+        component: ForgotPassword
+    },
+    {
+        path: prefix + 'change-password',
+        name: 'change.password',
+        component: ChangePassword
     },
     {
         path: prefix,
@@ -74,7 +86,7 @@ const router = createRouter({
     // linkExactActiveClass: "bg-blue-600"
 });
 
-// console.log(routes);
+console.log(routes);
 // protecting routes
 router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {

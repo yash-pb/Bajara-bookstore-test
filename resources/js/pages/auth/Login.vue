@@ -7,7 +7,7 @@
                 <h2 class="mt-7 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
             </div>
             <div v-if="message" class="p-4 mb-4 my-2 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
-                {{ msg }}
+                {{ message }}
             </div>
             <form @submit.prevent="checkLogin" class="space-y-5">
                 <div>
@@ -27,33 +27,25 @@
                 </div>
 
                 <div class="text-sm text-right">
-                    <a href="#" data-modal-target="default-modal" data-modal-toggle="default-modal" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                    <router-link :to="{name:'forgot.password'}">
+                        <a data-modal-target="default-modal" data-modal-toggle="default-modal" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                    </router-link>
                 </div>
         
                 <div>
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded text-white w-full">Sign in</button>
-                    <!-- <div class="col-12 text-center">
-                                <label>Don't have an account? <router-link :to="{name:'register'}">Register Now!</router-link></label>
-                            </div> -->
-                </div>
-
-                <div class="text-sm text-center">
-                    <router-link :to="{name:'dashboard'}">
-                        <spam class="font-semibold text-indigo-600 hover:text-indigo-500">Register as new user</spam>
-                    </router-link>
                 </div>
             </form>
         </div>
     </div>
 </template>
 <script>
-import { mapActions } from 'vuex';
-
 export default {
     name:"login",
     data() {
         return {
-            credentials: {}
+            credentials: {},
+            message: ''
         }
     },
     methods: {
@@ -68,7 +60,8 @@ export default {
             })
             .catch((err) => {
                 if (err.response.status === 422) {
-                    console.log(err.response.data.message);
+                    // console.log(err.response.data.message);
+                    this.message = err.response.data.message;
                 }
             })
             .finally(() => this.loading = false)

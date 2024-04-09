@@ -1,32 +1,38 @@
-<script setup>
-import { reactive, ref } from 'vue';
- 
-const errors = ref({})
-
-const user = reactive({
-    full_name: '',
-    email: '',
-    mobile_no: '',
-    status: ''
-});
-
-function storeUser() {
-    axios
-    .post('store-user', user, {
-        headers: {
-            'Authorization' : `Bearer ${localStorage.getItem('token')}`
+<script>
+export default {
+    data() {
+        return {
+            errors: '',
+            user: {}
         }
-    })
-    .then(response => {
-        if(response.status === 200) {
-            window.location.href = '/admin/vue/users';
+    },
+    methods: {
+        async storeUser() {
+            axios.post('store-user', this.user, {
+                headers: {
+                    'Authorization' : `Bearer ${this.token}`
+                }
+            })
+            .then(response => {
+                if(response.status === 200) {
+                    this.$router.push({name: 'users'})
+                }
+            })
+            .catch((err) => {
+                if (err.response.status === 422) {
+                    this.errors = err.response.data.errors
+                }
+            })
+        },
+        onFileChange (e) {
+            this.book.cover_image = e.target.files[0];
         }
-    })
-    .catch((err) => {
-        if (err.response.status === 422) {
-            errors.value = err.response.data.errors
+    },
+    computed: {
+        token() {
+            return localStorage.getItem('token');
         }
-    });
+    },
 }
 </script>
 

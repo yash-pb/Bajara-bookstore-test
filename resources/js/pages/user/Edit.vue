@@ -1,63 +1,56 @@
-<script setup>
-import { onMounted, ref } from 'vue';
-const user = ref([])
-const errors = ref([])
- 
-const props = defineProps({
-    id: {
-        required: true,
-        type: String
-    }
-})
- 
-onMounted(async () => {
-    try {
-        const response = await axios.get('users/'+props.id, {
-            headers: {
-                'Authorization' : `Bearer ${localStorage.getItem('token')}`
+<script>
+export default {
+    data() {
+        return {
+            errors: '',
+            user: {},
+            id: this.$route.params.id
+        }
+    },
+    methods: {
+        async getUser () {
+            let response = await axios.get(`/users/${this.id}`, {
+                headers: {
+                    'Authorization' : `Bearer ${this.token}`
+                }
+            })
+            this.user = response.data.data
+        },
+        async updateUser () {
+            this.errors = '';
+            try {
+                await axios.post(`/store-user/${this.id}`, this.user, {
+                    headers: {
+                        'content-type': 'multipart/form-data',
+                        'Authorization' : `Bearer ${this.token}`
+                    }
+                })
+                this.$router.push({name: 'users'})
+            } catch (e) {
+                if (e.response.status === 422) {
+                    for (const key in e.response.data.errors) {
+                        this.errors = e.response.data.errors
+                    }
+                }
             }
-        }).then(response => {
-            user.value = response.data.data
-        })
-        .catch((err) => {
-            if (err.response.status === 401) {
-                console.log(err.response.data.message);
-                this.$router.push({ name: 'users' });
-            }
-        });
-        
-    } catch (error) {
-        console.error('error => ', error);
-    }
-});
-
-function storeUser() {
-    axios
-    .post('store-user/'+props.id, user.value, {
-        headers: {
-            'Authorization' : `Bearer ${localStorage.getItem('token')}`
         }
-    })
-    .then(response => {
-        if(response.status === 200) {
-            window.location.href = '/admin/vue/users';
+    },
+    async mounted() {
+        await this.getUser();
+    },
+    computed: {
+        token() {
+            return localStorage.getItem('token');
         }
-    })
-    .catch((err) => {
-        console.log("err => ", err);
-        if (err.response.status === 422) {
-            errors.value = err.response.data.errors
-        }
-    });
+    },
 }
- 
 </script>
 
 <template>
     
     <h1 class="text-center text-2xl font-bold my-3">Update User</h1>
 
-    <form class="w-full" @submit.prevent="storeUser" enctype="multipart/form-data">
+    <form class="w-full" @submit.prevent="updateUser" enctype="multipart/form-data">
         <div class="flex flex-wrap -mx-3 mb-4">
             <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name">

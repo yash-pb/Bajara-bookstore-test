@@ -29,7 +29,7 @@ Route::name('user.')->group(function () {
     Route::match(['get','post'],'/register', [authController::class, 'register'])->name('register');
     Route::match(['get','post'],'/login', [authController::class, 'login'])->name('login')->middleware('guest');
     Route::match(['get','post'],'/forgot-password', [authController::class, 'forgotPassword'])->name('forgot.password')->middleware('guest');
-    Route::match(['get','post'],'/change-password/{token}', [authController::class, 'changePassword'])->name('change.password')->middleware('guest');
+    Route::match(['get','post'],'/change-password', [authController::class, 'changePassword'])->name('change.password')->middleware('guest');
     Route::match(['get','post'],'/edit-profile', [authController::class, 'editProfile'])->name('edit.profile')->middleware('auth');
     Route::get('/logout', [authController::class, 'logout'])->name('logout');
 

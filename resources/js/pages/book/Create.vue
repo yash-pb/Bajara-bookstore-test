@@ -1,37 +1,52 @@
-<script setup>
-import useBooks from '../../composables/books'
-import { reactive } from 'vue'
- 
-const form = reactive({
-    name: '',
-    description: '',
-    price: '',
-    status: '',
-    cover_image: ''
-})
- 
-const { errors, storeBook } = useBooks()
- 
-const saveBook = async () => {
-    await storeBook({ ...form })
-}
-
-const onFileChange = (e) => {
-    form.cover_image = e.target.files[0];
+<script>
+export default {
+    data() {
+        return {
+            errors: '',
+            book: {}
+        }
+    },
+    methods: {
+        async storeBook () {
+            this.errors = '';
+            try {
+                await axios.post('/store-book', this.book, {
+                    headers: {
+                        'content-type': 'multipart/form-data',
+                        'Authorization' : `Bearer ${this.token}`
+                    }
+                })
+                this.$router.push({name: 'books'})
+            } catch (e) {
+                if (e.response.status === 422) {
+                    for (const key in e.response.data.errors) {
+                        this.errors = e.response.data.errors
+                    }
+                }
+            }
+        },
+        onFileChange (e) {
+            this.book.cover_image = e.target.files[0];
+        }
+    },
+    computed: {
+        token() {
+            return localStorage.getItem('token');
+        }
+    },
 }
 </script>
 
 <template>
-    
     <h1 class="text-center text-2xl font-bold my-3">Create Book</h1>
 
-    <form class="w-full" @submit.prevent="saveBook" enctype="multipart/form-data">
+    <form class="w-full" @submit.prevent="storeBook" enctype="multipart/form-data">
         <div class="flex flex-wrap -mx-3 mb-4">
         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name">
                 Book Name
             </label>
-            <input id="name" v-model="form.name" name="name" type="text" placeholder="Enter book name" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+            <input id="name" v-model="book.name" name="name" type="text" placeholder="Enter book name" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
             <p class="error text-red-500 text-xs italic" v-if="errors?.name">{{ errors.name[0] }}</p>
         </div>
         
@@ -40,7 +55,7 @@ const onFileChange = (e) => {
                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="email">
                     Description
                 </label>
-                <textarea name="description" v-model="form.description" class="py-3 px-4 resize-y rounded-md w-full md:resize border border-gray-200 focus:border-gray-500 bg-gray-200 focus:bg-white">
+                <textarea name="description" v-model="book.description" class="py-3 px-4 resize-y rounded-md w-full md:resize border border-gray-200 focus:border-gray-500 bg-gray-200 focus:bg-white">
                 </textarea>
                 <p class="error text-red-500 text-xs italic" v-if="errors?.description">{{ errors.description[0] }}</p>
             </div>
@@ -51,7 +66,7 @@ const onFileChange = (e) => {
                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="price">
                     Price
                 </label>
-                <input name="price" v-model="form.price" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="price" type="number" placeholder="Enter price">
+                <input name="price" v-model="book.price" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="price" type="number" placeholder="Enter price">
                 <p class="error text-red-500 text-xs italic" v-if="errors?.price">{{ errors.price[0] }}</p>
             </div>
             <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -59,7 +74,7 @@ const onFileChange = (e) => {
                     Status
                 </label>
                 <div class="relative">
-                    <select name="status" v-model="form.status" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="status">
+                    <select name="status" v-model="book.status" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="status">
                         <option value="">Select Option</option>
                         <option value="Active">Active</option>
                         <option value="In-active">In-Active</option>

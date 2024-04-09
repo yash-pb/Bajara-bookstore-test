@@ -1,3 +1,105 @@
+<script>
+import { TailwindPagination } from 'laravel-vue-pagination';
+    export default {
+        data() {
+            return {
+                books: [],
+                search: [],
+                booksLength: [],
+                perPage: 2,
+                sorting: {
+                    "col": 'name',
+                    "by": 'asc'
+                },
+            }
+        },
+        components: {
+            TailwindPagination
+        },
+        methods: {
+            async getBooks (page = 1) {
+                await axios.get(`books?page=${page}`, {
+                    headers: {
+                        'Authorization' : `Bearer ${this.token}`
+                    },
+                    params: {
+                        'search': this.search,
+                        'sorting': JSON.stringify(this.sorting),
+                        'per_page': this.perPage
+                    }
+                })
+                .then(response => {
+                    this.books = response.data ?? [];
+                    this.booksLength = response.data.data.length;
+                    this.sorting = JSON.parse(response.data.sorting);
+                })
+                .catch(err => {
+                    if(err.response.status == 401) {
+                        router.push({ name: 'login' })
+                    }
+                });
+            },
+            async deleteBooks (id) {
+                if (!window.confirm('You sure?')) {
+                    return
+                }
+                await this.destroyBook(id);
+            },
+            async destroyBook(id) {
+                this.errors = ''
+                try {
+                    await axios.delete(`/books/destroy/${id}`, {
+                        headers: {
+                            'Authorization' : `Bearer ${this.token}`
+                        }
+                    })
+                    await this.getBooks()
+                } catch (e) {
+                    if (e.response.status === 422) {
+                        for (const key in e.response.data.errors) {
+                            errors.value = e.response.data.errors
+                        }
+                    }
+                }
+            },
+            async searchAssign (event) {
+                this.search = event.target.value;
+                await this.getBooks();
+            },
+            setUpSorting (th) {
+                return {
+                    'fa-sort-up': (this.sorting.col === th ? this.sorting.by == 'asc' : ''),
+                    'fa-sort-down': (this.sorting.col === th ? this.sorting.by == 'desc' : '')
+                }
+            },
+            async switchSort (col) {
+                if(this.sorting.col == col) {
+                    if(this.sorting.by == 'asc') {
+                        this.sorting.by = 'desc';
+                    } else {
+                        this.sorting.by = 'asc';
+                    }
+                } else {
+                    this.sorting.col = col;
+                    this.sorting.by = 'asc';
+                }
+                await this.getBooks();
+            },
+            async recordCount (event) {
+                this.perPage = event.target.value;
+                await this.getBooks();
+            }
+        },
+        computed: {
+            token() {
+                return localStorage.getItem('token');
+            }
+        },
+        async mounted() {
+            await this.getBooks();
+        }
+    }
+</script>
 
 <template>
     <div class="flex-col sm:flex-row flex sm:items-center justify-between my-3 sm:space-x-2 space-y-2 sm:space-y-0 w-full">
@@ -84,51 +186,3 @@
       @pagination-change-page="getBooks"
     />
 </template>
-
-<script setup>
-import useBooks from "../../composables/books";
-import { onMounted } from 'vue';
-import { TailwindPagination } from 'laravel-vue-pagination';
- 
-const { books, search, sorting, perPage, booksLength, getBooks, destroyBook } = useBooks() 
-onMounted(getBooks)
-
-const deleteBooks = async (id) => {
-    if (!window.confirm('You sure?')) {
-        return
-    }
- 
-    await destroyBook(id)
-}
-
-const searchAssign = (event) => {
-    search.value = event.target.value;
-    getBooks()
-}
-
-const setUpSorting = (th) => {
-    return {
-        'fa-sort-up': (sorting.value.col === th ? sorting.value.by == 'asc' : ''),
-        'fa-sort-down': (sorting.value.col === th ? sorting.value.by == 'desc' : '')
-    }
-}
-
-const switchSort = (col) => {
-    if(sorting.value.col == col) {
-        if(sorting.value.by == 'asc') {
-            sorting.value.by = 'desc';
-        } else {
-            sorting.value.by = 'asc';
-        }
-    } else {
-        sorting.value.col = col;
-        sorting.value.by = 'asc';
-    }
-    getBooks();
-}
-
-const recordCount = (event) => {
-    perPage.value = event.target.value;
-    getBooks();
-}
-</script>

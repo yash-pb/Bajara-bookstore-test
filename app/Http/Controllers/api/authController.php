@@ -12,6 +12,10 @@ use App\Http\Resources\UserCollection;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\BookResource;
 use App\Http\Resources\BookCollection;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\forgotPasswordMail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class authController extends Controller
 {
@@ -24,12 +28,67 @@ class authController extends Controller
         return ['token' => $token->plainTextToken];
     }
 
+    public function forgotPassword(Request $request)
+    {
+        if(User::where(['email' => $request->email, 'user_type' => 1])->exists()) {
+            $token = Str::random(32);
+            User::where(['email' => $request->email])->update([
+                'remember_token' => $token
+            ]);
+            Mail::to($request->email)->send(new forgotPasswordMail($token, env('APP_TEST_VUE_URL')));
+
+            return response()->json([
+                'message' => 'mail sent successfully'
+            ], 200);
+        }
+    
+        return response()->json([
+            'errors' => [
+                'email' => ['email not found']
+            ]
+        ], 422);
+    }
+
+    public function changePassword(Request $request, $token)
+    {        
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|confirmed|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation error.',
+                'errors'=>$validator->errors()
+            ], 422);
+        }
+ 
+        $update = User::where(['remember_token' => $token])->update([
+            'remember_token' => null,
+            'password' => Hash::make($request->password)
+        ]);
+    
+        return response()->json([
+            'message' => 'password updated successfully'
+        ], 200);
+    }
+
     public function logout()
     {
         auth('sanctum')->user()->tokens()->delete();
         return response()->json([
             'status' => true,
             'message' => 'logout success.'
+        ], 200);
+    }
+
+    public function getStates() {
+        $totalUsers = User::where('user_type', 2)->count();
+        $totalBooks = Book::count();
+
+        return response()->json([
+            'totalUsers' => $totalUsers,
+            'totalBooks' => $totalBooks
         ], 200);
     }
 

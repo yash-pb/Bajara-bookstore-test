@@ -8,6 +8,6 @@
 </head>
 <body>
     <p>Click below button to reset password</p>
-    <a href="{{ env('APP_TEST_URL').'/change-password/'.$token }}" class="bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded text-white">Send Mail</a>
+    <a href="{{ $path.'/change-password?token='.$token }}" class="bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded text-white">Send Mail</a>
 </body>
 </html>

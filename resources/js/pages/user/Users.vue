@@ -20,7 +20,7 @@ export default {
     methods: {
         async fetchUsers(page=1) {
             try {
-                const response = await axios.get(`users?page=${page}`, {
+                await axios.get(`users?page=${page}`, {
                     headers: {
                         'Authorization' : `Bearer ${this.token}`
                     },
@@ -45,35 +45,32 @@ export default {
                 console.error('error => ', error);
             }
         },
-        async deleteUsers(id) {
+        async deleteUser (id) {
+            if (!window.confirm('You sure?')) {
+                return
+            }
+            await this.destroyUser(id);
+        },
+        async destroyUser(id) {
+            this.errors = ''
             try {
-                const response = await axios.delete('users/destroy/'+id, {
+                await axios.delete(`/users/destroy/${id}`, {
                     headers: {
                         'Authorization' : `Bearer ${this.token}`
                     }
-                }).then(response => {
-                    if(response.status === 200)
-                        this.fetchUsers();
                 })
-                .catch((err) => {
-                    if (err.response.status === 401) {
-                        console.log(err.response.data.message);
+                await this.fetchUsers();
+            } catch (e) {
+                if (e.response.status === 422) {
+                    for (const key in e.response.data.errors) {
+                        this.errors = e.response.data.errors
                     }
-                });
-                
-            } catch (error) {
-                console.error('error => ', error);
+                }
             }
         },
         async searchAssign(event) {
             this.search = event.target.value;
             this.fetchUsers();
-        },
-        async setUpSorting(th) {
-            return {
-                'fa-sort-up': (this.sorting.col === th ? this.sorting.by == 'asc' : ''),
-                'fa-sort-down': (this.sorting.col === th ? this.sorting.by == 'desc' : '')
-            }
         },
         async switchSort(col) {
             if(this.sorting.col == col) {
@@ -91,7 +88,13 @@ export default {
         async recordCount(event) {
             this.perPage = event.target.value;
             this.fetchUsers();
-        }
+        },
+        setUpSorting(th) {
+            return {
+                'fa-sort-up': (this.sorting.col === th ? this.sorting.by == 'asc' : ''),
+                'fa-sort-down': (this.sorting.col === th ? this.sorting.by == 'desc' : '')
+            }
+        },
     },
     beforeMount(){
         this.fetchUsers();
@@ -188,7 +191,7 @@ export default {
                                     Edit
                                 </router-link>
                             </button>
-                            <button @click="deleteUsers(user.id)" class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Delete</button>
+                            <button @click="deleteUser(user.id)" class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">Delete</button>
                         </div>
                     </td>
                 </tr>
