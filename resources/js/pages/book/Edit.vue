@@ -13,8 +13,14 @@ export default {
                 headers: {
                     'Authorization' : `Bearer ${this.token}`
                 }
+            }).
+            then(response => {
+                this.book = response.data.data
+            }).catch(err => {
+                if (err.response.status === 404) {
+                    this.$router.push({name: 'books'})
+                }
             })
-            this.book = response.data.data
         },
         async updateBook () {
             this.errors = '';

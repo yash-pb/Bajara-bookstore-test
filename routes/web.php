@@ -21,7 +21,6 @@ use App\Models\Book;
 */
 
 Route::match(['get','post'],'/', [bookController::class, 'index'])->name('store.index');
-// middleware(['guest']);
 
 // User Routes
 Route::name('user.')->group(function () {
@@ -59,14 +58,8 @@ Route::group(['prefix' => 'admin/livewire','as' => 'admin.livewire.', 'middlewar
         })->name('list');
     });
 });
-// middleware(['guest']);
 
 // Vue Admin Route
-// Route::get('admin/vue/login', function () {
-//     return view('auth');
-// })->name('admin.vue');
-
-
 Route::get('admin/vue/{any?}', function () {
     return view('panel');
 })->name('admin.vue')->where('any', '.*');

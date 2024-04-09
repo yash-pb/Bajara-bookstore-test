@@ -9,12 +9,17 @@ export default {
     },
     methods: {
         async getUser () {
-            let response = await axios.get(`/users/${this.id}`, {
+            await axios.get(`/users/${this.id}`, {
                 headers: {
                     'Authorization' : `Bearer ${this.token}`
                 }
+            }).then(response => {
+                this.user = response.data.data
+            }).catch(err => {
+                if (err.response.status === 404) {
+                    this.$router.push({name: 'users'})
+                }
             })
-            this.user = response.data.data
         },
         async updateUser () {
             this.errors = '';
