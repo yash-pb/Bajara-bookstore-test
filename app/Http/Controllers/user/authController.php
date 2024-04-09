@@ -112,7 +112,7 @@ class authController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
-
+        
         $update = User::where(['remember_token' => $request->token])->update([
             'remember_token' => null,
             'password' => Hash::make($request->password)
@@ -120,7 +120,8 @@ class authController extends Controller
     
         return redirect()->route('user.login')->with([
             'msg' => 'Password Updated',
-            'color' => 'freen'
+            'color' => 'green',
+            'data' => $update
         ]);
     }
 

@@ -18,7 +18,7 @@
                     <p class="error text-{{Session::get('color')}}-500 text-xs italic text-center my-5">{{Session::get('msg')}}</p>
                 @endif
             </div>
-            <form class="space-y-5" action="{{ route('user.change.password', request()->segment(count(request()->segments()))) }}" method="POST">
+            <form class="space-y-5" action="{{ route('user.change.password', ['token' => request()->get('token')]) }}" method="POST">
                 @csrf
                 <div>
                     <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
