@@ -24,7 +24,11 @@ export default {
   methods: {
     async logout() {
         axios
-        .get('logout')
+        .get('logout', {
+            headers: {
+                'Authorization' : `Bearer ${localStorage.getItem('token')}`
+            },
+        })
         .then(response => {
             if(response.status === 200) {
                 localStorage.removeItem('token');

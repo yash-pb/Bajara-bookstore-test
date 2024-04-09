@@ -27,7 +27,11 @@ export default function useBooks() {
                 'search': search.value,
                 'sorting': JSON.stringify(sorting.value)
             }
-        })
+        }).catch(err => {
+            if(err.response.status == 401) {
+                router.push({ name: 'login' })
+            }
+        });
         books.value = response.data;
         booksLength.value = response.data.data.length;
         sorting.value = JSON.parse(response.data.sorting);
