@@ -69,7 +69,7 @@ Route::group(['prefix' => 'admin/livewire','as' => 'admin.livewire.', 'middlewar
 
 Route::get('admin/vue/{any?}', function () {
     return view('panel');
-})->name('admin.vue');
+})->name('admin.vue')->where('any', '.*');
 
 Route::get('test', function () {
     dd(date('Y-m-d H:i:s'));
