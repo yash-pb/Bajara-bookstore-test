@@ -3,7 +3,7 @@
     <div class="flex-col sm:flex-row flex sm:items-center justify-between my-3 sm:space-x-2 space-y-2 sm:space-y-0 w-full">
         <h1 class="text-2xl font-bold m-0">Books List</h1>
         <div class="sm:ms-auto flex items-center justify-center space-x-2">
-            <input type="search" id="search" v-model="search" v-on:keyup="getBooks" name="search" class="block p-2 pl-5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="Search books...">
+            <input type="search" id="search" v-model="search" v-on:keyup="searchAssign" name="search" class="block p-2 pl-5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="Search books...">
             <button class="ms-auto float-right flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded">
                 <router-link :to="{name: 'book.create'}">
                     Create Book
@@ -41,7 +41,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="book in books" :key="book.id">
+                <tr v-for="book in books.data" :key="book.id">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {{ book.name }}
                     </th>
@@ -65,16 +65,24 @@
                         </div>
                     </td>
                 </tr>
+                <tr v-if="booksLength === 0">
+                    <td colspan="5" align="center"> No Books Found </td>
+                </tr>
             </tbody>
         </table>
     </div>
+    <TailwindPagination
+      :data="books"
+      @pagination-change-page="getBooks"
+    />
 </template>
 
 <script setup>
 import useBooks from "../../composables/books";
 import { onMounted } from 'vue';
+import { TailwindPagination } from 'laravel-vue-pagination';
  
-const { books, getBooks, destroyBook } = useBooks() 
+const { books, search, booksLength, getBooks, destroyBook } = useBooks() 
 onMounted(getBooks)
 
 const deleteBooks = async (id) => {
@@ -83,5 +91,10 @@ const deleteBooks = async (id) => {
     }
  
     await destroyBook(id)
+}
+
+const searchAssign = (event) => {
+    search.value = event.target.value;
+    getBooks()
 }
 </script>

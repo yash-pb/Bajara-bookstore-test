@@ -18,7 +18,7 @@ class UserCollection extends ResourceCollection
         return [
             'data' => $this->collection,
             'meta' => [
-                'total_users' => $this->collection->count(),
+                'pagination' => $this->collection->count(),
             ],
         ];
 

@@ -4,7 +4,8 @@ import { useRouter } from 'vue-router'
 export default function useBooks() {
     const book = ref([])
     const books = ref([])
-    let search = '';
+    const search = ref([])
+    const booksLength = ref([])
  
     const errors = ref('')
     const router = useRouter()
@@ -13,19 +14,17 @@ export default function useBooks() {
         return localStorage.getItem('token');
     }
 
-    const getBooks = async (event = null) => {
-        if(event)
-            search = event.target.value;
-
-        let response = await axios.get('books', {
+    const getBooks = async (page = 1) => {
+        let response = await axios.get(`books?page=${page}`, {
             headers: {
                 'Authorization' : `Bearer ${getToken()}`
             },
             params: {
-                'search': search
+                'search': search.value
             }
         })
-        books.value = response.data.data;
+        books.value = response.data;
+        booksLength.value = response.data.data.length;
     }
 
     const storeBook = async (data) => {
@@ -97,6 +96,8 @@ export default function useBooks() {
         errors,
         book,
         books,
+        search,
+        booksLength,
         getBooks,
         storeBook,
         getBook,
