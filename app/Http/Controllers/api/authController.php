@@ -82,6 +82,11 @@ class authController extends Controller
         ], 200);
     }
 
+    public function fetchUser() {
+        $user = auth('sanctum')->user();
+        return new UserResource($user);
+    }
+
     public function getStates() {
         $totalUsers = User::where('user_type', 2)->count();
         $totalBooks = Book::count();

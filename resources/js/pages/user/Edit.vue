@@ -1,7 +1,10 @@
 <script>
+import { useAuthTokenStore } from '../../stores/authToken'
+
 export default {
     data() {
         return {
+            authToken: useAuthTokenStore().token,
             errors: '',
             user: {},
             id: this.$route.params.id
@@ -11,7 +14,7 @@ export default {
         async getUser () {
             await axios.get(`/users/${this.id}`, {
                 headers: {
-                    'Authorization' : `Bearer ${this.token}`
+                    'Authorization' : `Bearer ${this.authToken}`
                 }
             }).then(response => {
                 this.user = response.data.data
@@ -27,7 +30,7 @@ export default {
                 await axios.post(`/store-user/${this.id}`, this.user, {
                     headers: {
                         'content-type': 'multipart/form-data',
-                        'Authorization' : `Bearer ${this.token}`
+                        'Authorization' : `Bearer ${this.authToken}`
                     }
                 })
                 this.$router.push({name: 'users'})
@@ -42,12 +45,7 @@ export default {
     },
     async mounted() {
         await this.getUser();
-    },
-    computed: {
-        token() {
-            return localStorage.getItem('token');
-        }
-    },
+    }
 }
 </script>
 

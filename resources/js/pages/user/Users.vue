@@ -1,9 +1,11 @@
 <script>
 import { TailwindPagination } from 'laravel-vue-pagination';
+import { useAuthTokenStore } from "../../stores/authToken";
 
 export default {
     data() {
         return {
+            authToken: useAuthTokenStore().token,
             users: [],
             search: '',
             usersLength: 0,
@@ -22,7 +24,7 @@ export default {
             try {
                 await axios.get(`users?page=${page}`, {
                     headers: {
-                        'Authorization' : `Bearer ${this.token}`
+                        'Authorization' : `Bearer ${this.authToken}`
                     },
                     params: {
                         'search': this.search,
@@ -56,7 +58,7 @@ export default {
             try {
                 await axios.delete(`/users/destroy/${id}`, {
                     headers: {
-                        'Authorization' : `Bearer ${this.token}`
+                        'Authorization' : `Bearer ${this.authToken}`
                     }
                 })
                 await this.fetchUsers();
@@ -98,11 +100,6 @@ export default {
     },
     beforeMount(){
         this.fetchUsers();
-    },
-    computed: {
-        token() {
-            return localStorage.getItem('token');
-        }
     }
 }
 </script>

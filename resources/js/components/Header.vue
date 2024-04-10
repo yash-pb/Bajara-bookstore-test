@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import { useAuthTokenStore } from "../stores/authToken";
+
 export default {
   name: 'Header',
   methods: {
@@ -26,7 +28,7 @@ export default {
         axios
         .get('logout', {
             headers: {
-                'Authorization' : `Bearer ${localStorage.getItem('token')}`
+                'Authorization' : `Bearer ${useAuthTokenStore().token}`
             },
         })
         .then(response => {

@@ -40,6 +40,7 @@
     </div>
 </template>
 <script>
+import { useAuthTokenStore } from "../../stores/authToken";
 export default {
     name:"login",
     data() {
@@ -52,15 +53,15 @@ export default {
         async checkLogin() {
             axios
             .post('login', this.credentials)
-            .then(response => {
+            .then(async (response) => {
                 if(response.status === 200) {
                     localStorage.setItem('token', response.data.token);
+                    await useAuthTokenStore().setToken(response.data.token);
                     this.$router.push({ name: 'dashboard' });
                 }
             })
             .catch((err) => {
                 if (err.response.status === 422) {
-                    // console.log(err.response.data.message);
                     this.message = err.response.data.message;
                 }
             })

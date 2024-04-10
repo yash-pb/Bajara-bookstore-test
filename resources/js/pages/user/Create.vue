@@ -1,7 +1,10 @@
 <script>
+import { useAuthTokenStore } from '../../stores/authToken'
+
 export default {
     data() {
         return {
+            authToken: useAuthTokenStore().token,
             errors: '',
             user: {}
         }
@@ -10,7 +13,7 @@ export default {
         async storeUser() {
             axios.post('store-user', this.user, {
                 headers: {
-                    'Authorization' : `Bearer ${this.token}`
+                    'Authorization' : `Bearer ${this.authToken}`
                 }
             })
             .then(response => {
@@ -27,12 +30,7 @@ export default {
         onFileChange (e) {
             this.book.cover_image = e.target.files[0];
         }
-    },
-    computed: {
-        token() {
-            return localStorage.getItem('token');
-        }
-    },
+    }
 }
 </script>
 

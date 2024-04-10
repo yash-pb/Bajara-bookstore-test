@@ -1,33 +1,30 @@
 <script>
+import { useAuthTokenStore } from "../stores/authToken";
+
 export default {
     data() {
         return {
             totalUsers: 0,
-            totalBooks: 0
+            totalBooks: 0,
+            authToken: useAuthTokenStore().token
         }
     },
     methods: {
         async getStates() {
             await axios.get(`get-states`, {
                 headers: {
-                    'Authorization' : `Bearer ${this.token}`
+                    'Authorization' : `Bearer ${this.authToken}`
                 }
             })
             .then(response => {
-                console.log('response => ', response);
                 this.totalUsers = response.data.totalUsers ?? [];
                 this.totalBooks = response.data.totalBooks;
             })
             .catch(err => {
                 if(err.response.status == 401) {
-                    router.push({ name: 'login' })
+                    this.$router.push({ name: 'login' })
                 }
             });
-        }
-    },
-    computed: {
-        token() {
-            return localStorage.getItem('token');
         }
     },
     async mounted() {

@@ -11,6 +11,7 @@ import UserCreate from "./pages/user/Create.vue";
 import UserEdit from "./pages/user/Edit.vue";
 import BookCreate from "./pages/book/Create.vue";
 import BookEdit from "./pages/book/Edit.vue";
+import { useAuthTokenStore } from "./stores/authToken";
 
 const prefix = '/admin/vue/';
 
@@ -90,7 +91,7 @@ console.log(routes);
 // protecting routes
 router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
-      const token = localStorage.getItem('token');
+      const token = useAuthTokenStore().token;
       if (token) {
         next();
       } else {

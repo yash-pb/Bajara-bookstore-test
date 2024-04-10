@@ -4,8 +4,12 @@ import App from './App.vue'
 import router from "./routes";
 import VueAxios from 'vue-axios';
 import axios from 'axios';
+import { createPinia, setActivePinia } from 'pinia'
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = 'http://127.0.0.1:8000/admin/vue/api/';
 
-createApp(App).use(router, VueAxios, axios).mount('#app');
+const pinia = createPinia();
+setActivePinia(pinia);
+
+createApp(App).use(router, pinia, VueAxios, axios).mount('#app');

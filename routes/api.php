@@ -23,6 +23,7 @@ Route::post('/login', [authController::class, 'login']);
 Route::post('/forgot-password', [authController::class, 'forgotPassword'])->name('forgot.password')->middleware('guest');
 Route::post('/change-password/{token}', [authController::class, 'changePassword'])->name('change.password')->middleware('guest');
 
+Route::get('/fetch-user', [authController::class, 'fetchUser'])->middleware('auth:sanctum');
 Route::get('/get-states', [authController::class, 'getStates'])->middleware('auth:sanctum');
 
 Route::get('/users/{id?}', [authController::class, 'users'])->middleware('auth:sanctum');

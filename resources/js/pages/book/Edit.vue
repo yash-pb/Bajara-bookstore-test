@@ -1,7 +1,9 @@
 <script>
+import { useAuthTokenStore } from "../../stores/authToken";
 export default {
     data() {
         return {
+            authToken: useAuthTokenStore().token,
             errors: '',
             book: {},
             id: this.$route.params.id
@@ -11,7 +13,7 @@ export default {
         async getBook (id) {
             let response = await axios.get(`/books/${this.id}`, {
                 headers: {
-                    'Authorization' : `Bearer ${this.token}`
+                    'Authorization' : `Bearer ${this.authToken}`
                 }
             }).
             then(response => {
@@ -28,7 +30,7 @@ export default {
                 await axios.post(`/update-book/${this.id}`, this.book, {
                     headers: {
                         'content-type': 'multipart/form-data',
-                        'Authorization' : `Bearer ${this.token}`
+                        'Authorization' : `Bearer ${this.authToken}`
                     }
                 })
                 this.$router.push({name: 'books'})
@@ -46,12 +48,7 @@ export default {
     },
     async mounted() {
         await this.getBook();
-    },
-    computed: {
-        token() {
-            return localStorage.getItem('token');
-        }
-    },
+    }
 }
 </script>
 

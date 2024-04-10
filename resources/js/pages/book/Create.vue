@@ -1,7 +1,9 @@
 <script>
+import { useAuthTokenStore } from "../../stores/authToken";
 export default {
     data() {
         return {
+            authToken: useAuthTokenStore().token,
             errors: '',
             book: {}
         }
@@ -13,7 +15,7 @@ export default {
                 await axios.post('/store-book', this.book, {
                     headers: {
                         'content-type': 'multipart/form-data',
-                        'Authorization' : `Bearer ${this.token}`
+                        'Authorization' : `Bearer ${this.authToken}`
                     }
                 })
                 this.$router.push({name: 'books'})
@@ -28,12 +30,7 @@ export default {
         onFileChange (e) {
             this.book.cover_image = e.target.files[0];
         }
-    },
-    computed: {
-        token() {
-            return localStorage.getItem('token');
-        }
-    },
+    }
 }
 </script>
 

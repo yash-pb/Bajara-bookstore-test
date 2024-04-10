@@ -1,5 +1,6 @@
 <script>
 import { TailwindPagination } from 'laravel-vue-pagination';
+import { useAuthTokenStore } from "../../stores/authToken";
     export default {
         data() {
             return {
@@ -11,6 +12,7 @@ import { TailwindPagination } from 'laravel-vue-pagination';
                     "col": 'name',
                     "by": 'asc'
                 },
+                authToken: useAuthTokenStore().token
             }
         },
         components: {
@@ -20,7 +22,7 @@ import { TailwindPagination } from 'laravel-vue-pagination';
             async getBooks (page = 1) {
                 await axios.get(`books?page=${page}`, {
                     headers: {
-                        'Authorization' : `Bearer ${this.token}`
+                        'Authorization' : `Bearer ${this.authToken}`
                     },
                     params: {
                         'search': this.search,
@@ -50,7 +52,7 @@ import { TailwindPagination } from 'laravel-vue-pagination';
                 try {
                     await axios.delete(`/books/destroy/${id}`, {
                         headers: {
-                            'Authorization' : `Bearer ${this.token}`
+                            'Authorization' : `Bearer ${this.authToken}`
                         }
                     })
                     await this.getBooks()
@@ -88,11 +90,6 @@ import { TailwindPagination } from 'laravel-vue-pagination';
             async recordCount (event) {
                 this.perPage = event.target.value;
                 await this.getBooks();
-            }
-        },
-        computed: {
-            token() {
-                return localStorage.getItem('token');
             }
         },
         async mounted() {
