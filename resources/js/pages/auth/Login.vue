@@ -40,7 +40,8 @@
     </div>
 </template>
 <script>
-import { useAuthTokenStore } from "../../stores/authToken";
+import { useUserStore } from "../../stores/user";
+// const userStore = useUserStore();
 export default {
     name:"login",
     data() {
@@ -56,11 +57,12 @@ export default {
             .then(async (response) => {
                 if(response.status === 200) {
                     localStorage.setItem('token', response.data.token);
-                    await useAuthTokenStore().setToken(response.data.token);
+                    await useUserStore().setToken(response.data.token);
                     this.$router.push({ name: 'dashboard' });
                 }
             })
             .catch((err) => {
+                console.log(err);
                 if (err.response.status === 422) {
                     this.message = err.response.data.message;
                 }

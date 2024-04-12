@@ -11,6 +11,7 @@
                 </div>
                 <!-- <button v-if="loggedIn" @click="setLogin()">Logout</button> -->
                 <div class="">
+                    <span class="mr-3">{{ user.full_name }}</span>
                     <a href="#" @click="logout" class="font-medium text-blue-600 hover:underline">Log out</a>
                 </div>
             </div>
@@ -19,16 +20,22 @@
 </template>
 
 <script>
-import { useAuthTokenStore } from "../stores/authToken";
+import { useUserStore } from "../stores/user";
+// const userStore = useUserStore();
 
 export default {
   name: 'Header',
+  data() {
+    return {
+        user: useUserStore().user
+    }
+  },
   methods: {
     async logout() {
         axios
         .get('logout', {
             headers: {
-                'Authorization' : `Bearer ${useAuthTokenStore().token}`
+                'Authorization' : `Bearer ${useUserStore().token}`
             },
         })
         .then(response => {

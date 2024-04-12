@@ -1,12 +1,13 @@
 <script>
-import { useAuthTokenStore } from "../stores/authToken";
+import { useUserStore } from "../stores/user";
+
 
 export default {
     data() {
         return {
             totalUsers: 0,
             totalBooks: 0,
-            authToken: useAuthTokenStore().token
+            authToken: useUserStore().token
         }
     },
     methods: {

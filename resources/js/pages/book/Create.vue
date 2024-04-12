@@ -1,9 +1,9 @@
 <script>
-import { useAuthTokenStore } from "../../stores/authToken";
+import { useUserStore } from "../../stores/user";
 export default {
     data() {
         return {
-            authToken: useAuthTokenStore().token,
+            authToken: useUserStore().token,
             errors: '',
             book: {}
         }

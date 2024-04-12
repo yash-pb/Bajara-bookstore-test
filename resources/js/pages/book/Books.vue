@@ -1,6 +1,6 @@
 <script>
 import { TailwindPagination } from 'laravel-vue-pagination';
-import { useAuthTokenStore } from "../../stores/authToken";
+import { useUserStore } from "../../stores/user";
     export default {
         data() {
             return {
@@ -12,7 +12,7 @@ import { useAuthTokenStore } from "../../stores/authToken";
                     "col": 'name',
                     "by": 'asc'
                 },
-                authToken: useAuthTokenStore().token
+                authToken: useUserStore().token
             }
         },
         components: {

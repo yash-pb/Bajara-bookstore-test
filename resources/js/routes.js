@@ -11,7 +11,7 @@ import UserCreate from "./pages/user/Create.vue";
 import UserEdit from "./pages/user/Edit.vue";
 import BookCreate from "./pages/book/Create.vue";
 import BookEdit from "./pages/book/Edit.vue";
-import { useAuthTokenStore } from "./stores/authToken";
+import { useUserStore } from "./stores/user";
 
 const prefix = '/admin/vue/';
 
@@ -89,10 +89,13 @@ const router = createRouter({
 
 console.log(routes);
 // protecting routes
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     if (to.meta.requiresAuth) {
-      const token = useAuthTokenStore().token;
+      const token = useUserStore().token;
       if (token) {
+        if(useUserStore().user.full_name == undefined) {
+            await useUserStore().fetchUser()
+        }
         next();
       } else {
         next({name: 'login'});
