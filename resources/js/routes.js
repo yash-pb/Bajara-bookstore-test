@@ -90,11 +90,12 @@ const router = createRouter({
 console.log(routes);
 // protecting routes
 router.beforeEach(async (to, from, next) => {
+    const userStore = useUserStore();
     if (to.meta.requiresAuth) {
-      const token = useUserStore().token;
+      const token = userStore.token;
       if (token) {
-        if(useUserStore().user.full_name == undefined) {
-            await useUserStore().fetchUser()
+        if(userStore.user.full_name == undefined) {
+            await userStore.fetchUser()
         }
         next();
       } else {
