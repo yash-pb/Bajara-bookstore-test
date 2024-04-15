@@ -70,9 +70,15 @@ export default {
                 }
             }
         },
-        async searchAssign(event) {
-            this.search = event.target.value;
-            this.fetchUsers();
+        searchAssign () {
+            const timeoutId = window.setTimeout(() => {}, 0);
+            for (let id = timeoutId; id >= 0; id -= 1) {
+                window.clearTimeout(id);
+            }
+
+            setTimeout(async () => {
+                await this.fetchUsers();
+            }, 500);
         },
         async switchSort(col) {
             if(this.sorting.col == col) {

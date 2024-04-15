@@ -64,9 +64,15 @@ import { useUserStore } from "../../stores/user";
                     }
                 }
             },
-            async searchAssign (event) {
-                this.search = event.target.value;
-                await this.getBooks();
+            searchAssign () {
+                const timeoutId = window.setTimeout(() => {}, 0);
+                for (let id = timeoutId; id >= 0; id -= 1) {
+                    window.clearTimeout(id);
+                }
+
+                setTimeout(async () => {
+                    await this.getBooks();
+                }, 500);
             },
             setUpSorting (th) {
                 return {
