@@ -20,7 +20,10 @@ use App\Models\Book;
 |
 */
 
-Route::match(['get','post'],'/', [bookController::class, 'index'])->name('store.index');
+// Route::match(['get','post'],'/', [bookController::class, 'index'])->name('store.index');
+Route::match(['get','post'],'/', function() {
+    return view('livewire.store.indexLayout');
+})->name('store.index');
 
 // User Routes
 Route::name('user.')->group(function () {

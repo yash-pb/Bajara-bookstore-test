@@ -14,10 +14,10 @@
             <div class="relative mx-auto text-gray-600 mr-5 md:block hidden">
                 <form action="{{ route('store.index') }}" method="post">
                     @csrf
-                    <input
+                    <input disabled="disabled"
                         class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none"
                         type="search" name="search" placeholder="Search" value="{{ $search ?? '' }}">
-                    <button type="submit" class="absolute right-4 top-3">
+                    <button disabled="disabled" type="submit" class="absolute right-4 top-3">
                         <svg class="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
                             viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;"
